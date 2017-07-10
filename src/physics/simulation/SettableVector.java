@@ -120,7 +120,6 @@ public class SettableVector extends CoordinateVector{
 	 * 
 	 * @return The values of the vector.
 	 */
-	@Override
 	public double[] getValues()
 	{
 		return this.values;
@@ -133,7 +132,6 @@ public class SettableVector extends CoordinateVector{
 	 * @return The value of the given dimension.
 	 * @throws UnequalDimensionsException
 	 */
-	@Override
 	public double getSingleValue(int dim) throws UnequalDimensionsException
 	{
 		if(dim>this.dimensionCount)

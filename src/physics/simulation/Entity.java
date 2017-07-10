@@ -16,6 +16,7 @@ public class Entity implements Thing {
 	protected SettableVector position;
 	protected SettableVector velocity;
 	protected double mass = 0;
+	protected ForceVector[] forces;
 	
 	public Entity(World container)
 	{
@@ -99,9 +100,25 @@ public class Entity implements Thing {
 		return this.dimensionCount;
 	}
 	
+	public double getMass()
+	{
+		return this.mass;
+	}
+	
 	@Override
 	public void step()
 	{
-		
+		int forceCount = this.forces.length;
+		double[] positionShift = new double[dimensionCount];
+		double[] velocityShift = new double[dimensionCount];
+		int i;
+		for(i=0;i<forceCount;i++)
+		{
+			int o;
+			for(o=0;o<dimensionCount;o++)
+			{
+				
+			}
+		}
 	}
 }

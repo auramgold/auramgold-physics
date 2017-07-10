@@ -13,9 +13,6 @@ public abstract class CoordinateVector {
 	
 	protected int dimensionCount;
 	
-	public abstract double[] getValues();
-	public abstract double getSingleValue(int dim) throws UnequalDimensionsException;
-	
 	public int getDimensionCount()
 	{
 		return this.dimensionCount;
