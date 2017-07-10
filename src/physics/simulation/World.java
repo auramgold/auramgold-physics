@@ -29,12 +29,16 @@ public class World {
 	 */
 	protected int cycles = 0;
 	
+	/**
+	 * The <code>Thing</code>s in the world.
+	 */
 	protected List<Thing> contents = new ArrayList<>();
 
 	/**
+	 * Constructs a world object.
 	 * 
-	 * @param dimensions
-	 * @param scale
+	 * @param dimensions - The integer number of spatial dimensions in the world
+	 * @param scale - A double of how many steps per second to iterate on the world
 	 */
 	public World(int dimensions, double scale)
 	{
@@ -42,26 +46,52 @@ public class World {
 		this.timeScale = scale;
 	}
 	
+	/**
+	 * Get how much simulated time has occurred
+	 * 
+	 * @return The double number of cycles divided by the time scale.
+	 */
 	public double getTimePassed()
 	{
 		return (double)(this.cycles/this.timeScale);
 	}
 	
+	/**
+	 * Gets the number of spatial dimensions in the world.
+	 * 
+	 * @return
+	 */
 	public int getDimensionCount()
 	{
 		return this.dimensionCount;
 	}
 	
+	/**
+	 * Gets the time scale of the world.
+	 * 
+	 * @return
+	 */
 	public double getTimeScale()
 	{
 		return this.timeScale;
 	}
 	
+	/**
+	 * Returns the list of things in the world.
+	 * 
+	 * @return An <code>ArrayList&lt;Thing&gt;</code> of the world contents.
+	 */
 	public List<Thing> getWorldContents()
 	{
 		return this.contents;
 	}
 	
+	/**
+	 * Returns a list of all items in the world except for a specified one
+	 * 
+	 * @param what A <code>Thing</code> to not return
+	 * @return An <code>ArrayList&lt;Thing&gt;</code> of the world contents that are not <code>what</code>
+	 */
 	public List<Thing> getAllContentsBut(Thing what)
 	{
 		List<Thing> retList = new ArrayList<>();
@@ -77,6 +107,12 @@ public class World {
 		return retList;
 	}
 	
+	/**
+	 * Adds a <code>Thing</code> to the world.
+	 * 
+	 * @param what The <code>Thing</code> to add.
+	 * @throws UnequalDimensionsException
+	 */
 	public void appendContent(Thing what) throws UnequalDimensionsException
 	{
 		if(what instanceof Entity)
@@ -96,6 +132,9 @@ public class World {
 		}
 	}
 	
+	/**
+	 * Steps through a world cycle.
+	 */
 	public void step()
 	{
 		int amount = this.contents.size();
@@ -111,6 +150,11 @@ public class World {
 		this.cycles++;
 	}
 	
+	/**
+	 * Prints all contents of the world and their forces, if applicable.
+	 * 
+	 * @return A formatted string.
+	 */
 	public String print()
 	{
 		String ret = "\nAt t="+this.getTimePassed()+":";

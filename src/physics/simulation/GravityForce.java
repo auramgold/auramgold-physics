@@ -13,8 +13,17 @@ import java.util.List;
  * @author Lauren Smith
  */
 public class GravityForce extends ForceVector{
+
+	/**
+	 * The number of components of the vector.
+	 */
 	public final int dimensionCount;
 	
+	/**
+	 * The number of components the gravity force has.
+	 * 
+	 * @param dims An integer number of dimensions.
+	 */
 	public GravityForce(int dims)
 	{
 		this.dimensionCount = dims;

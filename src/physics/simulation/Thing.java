@@ -11,7 +11,20 @@ package physics.simulation;
  */
 public interface Thing {
 	
+	/**
+	 * The method run every <code>World</code> cycle.
+	 */
 	public void step();
+
+	/**
+	 * The method run at the end of every <code>World</code> cycle.
+	 */
 	public void completeStep();
+
+	/**
+	 * Returns a simple textual representation of the thing.
+	 * 
+	 * @return A String representation of <code>this</code>.
+	 */
 	public String print();
 }

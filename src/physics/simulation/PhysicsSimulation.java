@@ -30,8 +30,6 @@ public class PhysicsSimulation {
 			Entity somethingElse = new Entity(mainWorld,1.0E20,new Vector(3),new Vector(3));
 			mainWorld.appendContent(something);
 			mainWorld.appendContent(somethingElse);
-			//ConstantAcceleration grav = new ConstantAcceleration(new Vector(0,-10,0));
-			//something.addForces(grav);
 			while(mainWorld.getTimePassed()<=5.0)
 			{
 				System.out.println(mainWorld.print());

@@ -11,11 +11,30 @@ package physics.simulation;
  * @author Lauren Smith
  */
 public class SpringForce extends ForceVector{
-	@SuppressWarnings("FieldNameHidesFieldInSuperclass")
+
+	/**
+	 * The number of components of the vector.
+	 */
 	public final int dimensionCount;
+
+	/**
+	 * The spring constant of the applied force, in units of mass/time<sup>2</sup>
+	 */
 	public final double springConstant;
+
+	/**
+	 * The point the distance is calculated from for the applied force.
+	 */
 	public final Vector centerPoint;
 	
+	/**
+	 * Constructs a spring force vector.
+	 * 
+	 * @param dims The number of components of the vector.
+	 * @param k	The spring constant, in units of mass/time<sup>2</sup>
+	 * @param center The <code>Vector</code> containing the location the distance is calculated from.
+	 * @throws UnequalDimensionsException
+	 */
 	public SpringForce(int dims,double k,Vector center) throws UnequalDimensionsException
 	{
 		if(center.dimensionCount==dims)

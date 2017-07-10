@@ -14,6 +14,18 @@ import java.util.logging.Logger;
  * @author Lauren Smith
  */
 public abstract class ForceVector{
+
+	/**
+	 * The number of components of the vector.
+	 */
 	public int dimensionCount;
+
+	/**
+	 * Gets the force vector applied to a given entity in a given frame.
+	 * 
+	 * @param what An <code>Entity</code> to apply the force to.
+	 * @return A <code>Vector</code> containing the force applied to the entity.
+	 * @throws UnequalDimensionsException
+	 */
 	public abstract Vector getForceVector(Entity what) throws UnequalDimensionsException;
 }
