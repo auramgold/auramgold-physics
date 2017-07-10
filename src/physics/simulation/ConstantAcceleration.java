@@ -32,6 +32,11 @@ public class ConstantAcceleration extends ForceVector {
 		this.accelerationVector = accelerationVector;
 	}
 	
+	@Override
+	public int getDimensionCount()
+	{
+		return this.dimensionCount;
+	}
 
 	@Override
 	public Vector getForceVector(Entity what)

@@ -102,7 +102,7 @@ public class Entity implements Thing {
 	 */
 	public void addForce(ForceVector what) throws UnequalDimensionsException
 	{
-		if(this.dimensionCount==what.dimensionCount)
+		if(this.getDimensionCount()==what.getDimensionCount())
 		{
 			this.forces.add(what);
 		}
@@ -116,14 +116,15 @@ public class Entity implements Thing {
 	 * Adds a variable number of forces to the entity.
 	 * 
 	 * @param what Either an array or a comma-separated list of <code>ForceVector</code>s
+	 * @throws physics.simulation.UnequalDimensionsException
 	 */
-	public void addForces(ForceVector... what)
+	public void addForces(ForceVector... what) throws UnequalDimensionsException
 	{
 		int len = what.length;
 		int i;
 		for(i=0;i<len;i++)
 		{
-			this.forces.add(what[i]);
+			this.addForce(what[i]);
 		}
 	}
 	

@@ -30,6 +30,12 @@ public class GravityForce extends ForceVector{
 	}
 	
 	@Override
+	public int getDimensionCount()
+	{
+		return this.dimensionCount;
+	}
+	
+	@Override
 	public Vector getForceVector(Entity what) throws UnequalDimensionsException
 	{
 		World world = what.getContainingWorld();

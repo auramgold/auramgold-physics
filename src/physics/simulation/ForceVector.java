@@ -28,4 +28,6 @@ public abstract class ForceVector{
 	 * @throws UnequalDimensionsException
 	 */
 	public abstract Vector getForceVector(Entity what) throws UnequalDimensionsException;
+	
+	public abstract int getDimensionCount();
 }

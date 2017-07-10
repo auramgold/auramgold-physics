@@ -117,7 +117,7 @@ public class World {
 	{
 		if(what instanceof Entity)
 		{
-			if(this.dimensionCount == ((Entity) what).dimensionCount)
+			if(this.dimensionCount == ((Entity) what).getDimensionCount())
 			{
 				if(((Entity) what).mass!=0.0 && PhysicsSimulation.useGravity)
 				{

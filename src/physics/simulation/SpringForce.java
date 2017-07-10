@@ -50,6 +50,12 @@ public class SpringForce extends ForceVector{
 	}
 	
 	@Override
+	public int getDimensionCount()
+	{
+		return this.dimensionCount;
+	}
+	
+	@Override
 	public Vector getForceVector(Entity what) throws UnequalDimensionsException
 	{
 		Vector inter = what.getPositionVector().getIntermediateVector(this.centerPoint);
