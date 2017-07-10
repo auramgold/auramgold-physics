@@ -83,6 +83,10 @@ public class World {
 		{
 			if(this.dimensionCount == ((Entity) what).dimensionCount)
 			{
+				if(((Entity) what).mass!=0.0 && PhysicsSimulation.useGravity)
+				{
+					((Entity) what).addForce(PhysicsSimulation.gravity);
+				}
 				this.contents.add(what);
 			}
 			else
@@ -113,7 +117,12 @@ public class World {
 		int count = this.contents.size();
 		for(int i = 0; i < count; i++)
 		{
-			ret = ret+"\n    "+i+": "+this.contents.get(i).print();
+			Thing item = this.contents.get(i);
+			ret = ret+"\n    "+i+": "+item.print();
+			if(item instanceof Entity)
+			{
+				ret = ret+"\n"+((Entity) item).printForces();
+			}
 		}
 		return ret;
 	}

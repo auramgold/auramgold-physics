@@ -15,17 +15,24 @@ import java.util.logging.Logger;
  */
 public class PhysicsSimulation {
 
+	static double GravityConstant = 6.674E-11;
+	static int dimensionCount = 3;
+	static boolean useGravity = true;
+	@SuppressWarnings("StaticNonFinalUsedInInitialization")
+	static GravityForce gravity = new GravityForce(dimensionCount);
 	/**
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
 		try {
-			World mainWorld = new World(3,60);
-			Entity something = new Entity(mainWorld,10.0,new Vector(0.0,5.0,0.0),new Vector(2.0,0.0,-1.0));
+			World mainWorld = new World(dimensionCount,200);
+			Entity something = new Entity(mainWorld,10.0,new Vector(0.0,1000.0,0.0),new Vector(2583.1373366509183,0.0,0.0));
+			Entity somethingElse = new Entity(mainWorld,1.0E20,new Vector(3),new Vector(3));
 			mainWorld.appendContent(something);
-			ConstantAcceleration grav = new ConstantAcceleration(new Vector(0,-10,0));
-			something.addForces(grav);
-			while(mainWorld.getTimePassed()<=1.0)
+			mainWorld.appendContent(somethingElse);
+			//ConstantAcceleration grav = new ConstantAcceleration(new Vector(0,-10,0));
+			//something.addForces(grav);
+			while(mainWorld.getTimePassed()<=5.0)
 			{
 				System.out.println(mainWorld.print());
 				mainWorld.step();
