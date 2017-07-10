@@ -5,11 +5,14 @@
  */
 package physics.simulation;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Lauren Smith
  */
-public class SettableVector extends CoordinateVector{
+public final class SettableVector extends CoordinateVector{
 	
 	/**
 	 * Array of values of vector.
@@ -58,6 +61,11 @@ public class SettableVector extends CoordinateVector{
 		int dimensions = vals.length;
 		this.dimensionCount = dimensions;
 		this.values = new double[dimensions];
+		try {
+			this.setValues(vals);
+		} catch (UnequalDimensionsException ex) {
+			Logger.getLogger(SettableVector.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 	
 	/**

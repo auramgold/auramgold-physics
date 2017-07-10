@@ -5,6 +5,9 @@
  */
 package physics.simulation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Lauren Smith
@@ -26,7 +29,7 @@ public class World {
 	 */
 	protected int cycles = 0;
 	
-	protected Thing[] contents;
+	protected List<Thing> contents = new ArrayList<>();
 
 	/**
 	 * 
@@ -49,13 +52,33 @@ public class World {
 		return this.dimensionCount;
 	}
 	
+	public double getTimeScale()
+	{
+		return this.timeScale;
+	}
+	
+	public void appendContent(Thing what) throws UnequalDimensionsException
+	{
+		if(what instanceof Entity)
+		{
+			if(this.dimensionCount == ((Entity) what).dimensionCount)
+			{
+				this.contents.add(what);
+			}
+			else
+			{
+				throw new UnequalDimensionsException();
+			}
+		}
+	}
+	
 	public void step()
 	{
-		int amount = this.contents.length;
+		int amount = this.contents.size();
 		int i;
 		for(i=0;i<amount;i++)
 		{
-			this.contents[i].step();
+			this.contents.get(i).step();
 		}
 		this.cycles++;
 	}

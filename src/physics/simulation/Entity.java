@@ -5,6 +5,12 @@
  */
 package physics.simulation;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Lauren Smith
@@ -16,7 +22,7 @@ public class Entity implements Thing {
 	protected SettableVector position;
 	protected SettableVector velocity;
 	protected double mass = 0;
-	protected ForceVector[] forces;
+	protected List<ForceVector> forces = new ArrayList<>();
 	
 	public Entity(World container)
 	{
@@ -59,9 +65,25 @@ public class Entity implements Thing {
 		}
 		else
 		{
+			System.out.println(Arrays.toString(pos.getValues()));
 			this.position = pos;
 			this.velocity = vel;
 			this.mass = massAmount;
+		}
+	}
+	
+	public void addForce(ForceVector what)
+	{
+		this.forces.add(what);
+	}
+	
+	public void addForces(ForceVector... what)
+	{
+		int len = what.length;
+		int i;
+		for(i=0;i<len;i++)
+		{
+			this.forces.add(what[i]);
 		}
 	}
 	
@@ -108,17 +130,34 @@ public class Entity implements Thing {
 	@Override
 	public void step()
 	{
-		int forceCount = this.forces.length;
+		int forceCount = this.forces.size();
 		double[] positionShift = new double[dimensionCount];
 		double[] velocityShift = new double[dimensionCount];
+		double timeScale = this.containingWorld.getTimeScale();
 		int i;
 		for(i=0;i<forceCount;i++)
 		{
 			int o;
+			ForceVector which = this.forces.get(i);
+			double[] vals = which.getValues(this);
 			for(o=0;o<dimensionCount;o++)
 			{
-				
+				double accel = vals[o]/this.mass;
+				velocityShift[o] = velocityShift[o] + accel/timeScale;
 			}
+		}
+		int o;
+		double[] velocityArr = this.velocity.getValues();
+		for(o=0;o<dimensionCount;o++)
+		{
+			positionShift[o] = velocityArr[o]/timeScale + velocityShift[o]/(2*timeScale);
+		}
+		
+		try {//this should not happen
+			this.position.shiftValues(positionShift);
+			this.velocity.shiftValues(velocityShift);
+		} catch (UnequalDimensionsException ex) {
+			Logger.getLogger(Entity.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 }
