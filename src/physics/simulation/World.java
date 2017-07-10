@@ -57,6 +57,26 @@ public class World {
 		return this.timeScale;
 	}
 	
+	public List<Thing> getWorldContents()
+	{
+		return this.contents;
+	}
+	
+	public List<Thing> getAllContentsBut(Thing what)
+	{
+		List<Thing> retList = new ArrayList<>();
+		int amount = this.contents.size();
+		int i;
+		for(i=0;i<amount;i++)
+		{
+			if(this.contents.get(i)!=what)
+			{
+				retList.add(this.contents.get(i));
+			}
+		}
+		return retList;
+	}
+	
 	public void appendContent(Thing what) throws UnequalDimensionsException
 	{
 		if(what instanceof Entity)
@@ -80,7 +100,21 @@ public class World {
 		{
 			this.contents.get(i).step();
 		}
+		for(i=0;i<amount;i++)
+		{
+			this.contents.get(i).completeStep();
+		}
 		this.cycles++;
 	}
-
+	
+	public String print()
+	{
+		String ret = "\nAt t="+this.getTimePassed()+":";
+		int count = this.contents.size();
+		for(int i = 0; i < count; i++)
+		{
+			ret = ret+"\n    "+i+": "+this.contents.get(i).print();
+		}
+		return ret;
+	}
 }

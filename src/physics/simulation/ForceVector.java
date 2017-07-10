@@ -13,23 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Lauren Smith
  */
-public abstract class ForceVector extends CoordinateVector {
-	
-	
-	public double[] getValues(Entity what)
-	{
-		int i;
-		double[] retarr = new double[this.dimensionCount];
-		for(i=0;i<this.dimensionCount;i++)
-		{
-			try {
-				retarr[i] = getSingleValue(i,what);
-			} catch (UnequalDimensionsException ex) {//this shouldn't happen
-				Logger.getLogger(ForceVector.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		return retarr;
-	}
-	
-	public abstract double getSingleValue(int dim,Entity what) throws UnequalDimensionsException;
+public abstract class ForceVector{
+	public int dimensionCount;
+	public abstract Vector getForceVector(Entity what) throws UnequalDimensionsException;
 }

@@ -12,4 +12,6 @@ package physics.simulation;
 public interface Thing {
 	
 	public void step();
+	public void completeStep();
+	public String print();
 }

@@ -7,7 +7,6 @@ package physics.simulation;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,54 +17,37 @@ import java.util.logging.Logger;
 public class Entity implements Thing {
 	
 	protected World containingWorld;
-	protected int dimensionCount;
-	protected SettableVector position;
-	protected SettableVector velocity;
+	public final int dimensionCount;
+	protected Vector position;
+	protected Vector velocity;
+	private Vector positionChange;
+	private Vector velocityChange;
 	protected double mass = 0;
 	protected List<ForceVector> forces = new ArrayList<>();
 	
-	public Entity(World container)
+	public Entity(World container, double massAmount)
 	{
 		this.containingWorld = container;
 		this.dimensionCount = containingWorld.getDimensionCount();
-		this.position = new SettableVector(new double[this.dimensionCount]);
-		this.velocity = new SettableVector(new double[this.dimensionCount]);
+		this.position = new Vector(new double[this.dimensionCount]);
+		this.velocity = new Vector(new double[this.dimensionCount]);
+		this.mass = massAmount;
 	}
 	
-	public Entity(World container,SettableVector pos,SettableVector vel) throws UnequalDimensionsException
+	public Entity(World container, double massAmount,Vector pos,Vector vel) throws UnequalDimensionsException
 	{
 		this.containingWorld = container;
 		this.dimensionCount = this.containingWorld.getDimensionCount();
-		if(pos.getDimensionCount()!=this.dimensionCount)
+		if(pos.dimensionCount!=this.dimensionCount)
 		{
 			throw new UnequalDimensionsException("Position vector has different dimension count to world.");
 		}
-		else if(vel.getDimensionCount()!=this.dimensionCount)
+		else if(vel.dimensionCount!=this.dimensionCount)
 		{
 			throw new UnequalDimensionsException("Velocity vector has different dimension count to world.");
 		}
 		else
 		{
-			this.position = pos;
-			this.velocity = vel;
-		}
-	}
-	
-	public Entity(World container,SettableVector pos,SettableVector vel, double massAmount) throws UnequalDimensionsException
-	{
-		this.containingWorld = container;
-		this.dimensionCount = this.containingWorld.getDimensionCount();
-		if(pos.getDimensionCount()!=this.dimensionCount)
-		{
-			throw new UnequalDimensionsException("Position vector has different dimension count to world.");
-		}
-		else if(vel.getDimensionCount()!=this.dimensionCount)
-		{
-			throw new UnequalDimensionsException("Velocity vector has different dimension count to world.");
-		}
-		else
-		{
-			System.out.println(Arrays.toString(pos.getValues()));
 			this.position = pos;
 			this.velocity = vel;
 			this.mass = massAmount;
@@ -87,29 +69,21 @@ public class Entity implements Thing {
 		}
 	}
 	
-	public SettableVector getPositionVector()
+	public Vector getPositionVector()
 	{
 		return this.position;
 	}
 	
-	public SettableVector getVelocityVector()
+	public Vector getVelocityVector()
 	{
 		return this.velocity;
 	}
 	
 	public double distanceTo(Entity other) throws UnequalDimensionsException
 	{
-		if(this.dimensionCount==other.getDimensionCount())
+		if(this.dimensionCount==other.dimensionCount)
 		{
-			double[] thisVals = this.getPositionVector().getValues();
-			double[] otherVals = other.getPositionVector().getValues();
-			int i;
-			double distSquared = 0;
-			for(i=0;i<this.dimensionCount;i++)
-			{
-				distSquared = distSquared + Math.pow(otherVals[i] - thisVals[i],2);
-			}
-			return Math.sqrt(distSquared);
+			return this.position.getIntermediateVector(other.getPositionVector()).getLength();
 		}
 		else
 		{
@@ -130,34 +104,44 @@ public class Entity implements Thing {
 	@Override
 	public void step()
 	{
-		int forceCount = this.forces.size();
-		double[] positionShift = new double[dimensionCount];
-		double[] velocityShift = new double[dimensionCount];
-		double timeScale = this.containingWorld.getTimeScale();
-		int i;
-		for(i=0;i<forceCount;i++)
+		try 
 		{
-			int o;
-			ForceVector which = this.forces.get(i);
-			double[] vals = which.getValues(this);
-			for(o=0;o<dimensionCount;o++)
+			int forceCount = this.forces.size();
+			this.positionChange = new Vector(this.dimensionCount);
+			this.velocityChange = new Vector(this.dimensionCount);
+			double timeScale = this.containingWorld.getTimeScale();
+			int i;
+			for(i=0;i<forceCount;i++)
 			{
-				double accel = vals[o]/this.mass;
-				velocityShift[o] = velocityShift[o] + accel/timeScale;
+				ForceVector which = this.forces.get(i);
+				this.velocityChange = this.velocityChange.add(which.getForceVector(this).multiply(1.0/(this.mass*timeScale)));
 			}
-		}
-		int o;
-		double[] velocityArr = this.velocity.getValues();
-		for(o=0;o<dimensionCount;o++)
+			this.positionChange = this.positionChange
+									.add(this.velocity.multiply(1/timeScale))
+									.add(this.velocityChange.multiply(1/(2.0*timeScale)));
+		} 
+		catch (UnequalDimensionsException ex) 
 		{
-			positionShift[o] = velocityArr[o]/timeScale + velocityShift[o]/(2*timeScale);
-		}
-		
-		try {//this should not happen
-			this.position.shiftValues(positionShift);
-			this.velocity.shiftValues(velocityShift);
-		} catch (UnequalDimensionsException ex) {
 			Logger.getLogger(Entity.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+	
+	@Override
+	public void completeStep()
+	{
+		try 
+		{
+			this.velocity = this.velocity.add(this.velocityChange);
+			this.position = this.position.add(this.positionChange);
+		} 
+		catch (UnequalDimensionsException ex) 
+		{
+			Logger.getLogger(Entity.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	public String print()
+	{
+		return "Pos: "+this.position.toString()+"; Vel: "+this.velocity.toString();
 	}
 }

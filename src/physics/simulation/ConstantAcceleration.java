@@ -10,40 +10,18 @@ package physics.simulation;
  * @author Lauren Smith
  */
 public class ConstantAcceleration extends ForceVector {
-	int dimAccel;
-	double accelRate;
+	public final int dimensionCount;
+	public final Vector accelerationVector;
 	
-	public ConstantAcceleration(int dims, int dimAcc, double rate) throws UnequalDimensionsException
+	public ConstantAcceleration(Vector accelerationVector)
 	{
-		if(dims>dimAcc)
-		{
-			this.dimensionCount = dims;
-			this.dimAccel = dimAcc;
-			this.accelRate = rate;
-		}
-		else
-		{
-			throw new UnequalDimensionsException();
-		}
+		this.dimensionCount = accelerationVector.dimensionCount;
+		this.accelerationVector = accelerationVector;
 	}
 	
 	@Override
-	public double getSingleValue(int dim,Entity what) throws UnequalDimensionsException
+	public Vector getForceVector(Entity what)
 	{
-		if(dim<this.dimensionCount)
-		{
-			if(dim==this.dimAccel)
-			{
-				return this.accelRate*what.getMass();
-			}
-			else
-			{
-				return 0.0;
-			}
-		}
-		else
-		{
-			throw new UnequalDimensionsException();
-		}
+		return this.accelerationVector.multiply(what.getMass());
 	}
 }

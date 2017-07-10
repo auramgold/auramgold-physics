@@ -11,16 +11,18 @@ package physics.simulation;
  * @author Lauren Smith
  */
 public class SpringForce extends ForceVector{
-	int dimSpring;
-	double springConstant;
+	@SuppressWarnings("FieldNameHidesFieldInSuperclass")
+	public final int dimensionCount;
+	public final double springConstant;
+	public final Vector centerPoint;
 	
-	public SpringForce(int dims,int dimSpring,double k) throws UnequalDimensionsException
+	public SpringForce(int dims,double k,Vector center) throws UnequalDimensionsException
 	{
-		if(dims>dimSpring)
+		if(center.dimensionCount==dims)
 		{
 			this.dimensionCount = dims;
-			this.dimSpring = dimSpring;
 			this.springConstant = k;
+			this.centerPoint = center;
 		}
 		else
 		{
@@ -29,22 +31,9 @@ public class SpringForce extends ForceVector{
 	}
 	
 	@Override
-	public double getSingleValue(int dim,Entity what) throws UnequalDimensionsException
+	public Vector getForceVector(Entity what) throws UnequalDimensionsException
 	{
-		if(dim<this.dimensionCount)
-		{
-			if(dim==this.dimSpring)
-			{
-				return this.springConstant*-what.getPositionVector().getSingleValue(dim);
-			}
-			else
-			{
-				return 0.0;
-			}
-		}
-		else
-		{
-			throw new UnequalDimensionsException();
-		}
+		Vector inter = what.getPositionVector().getIntermediateVector(this.centerPoint);
+		return inter.getUnitVector().multiply(inter.getLength()*this.springConstant);
 	}
 }

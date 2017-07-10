@@ -20,29 +20,20 @@ public class PhysicsSimulation {
 	 */
 	public static void main(String[] args) {
 		try {
-			World mainWorld = new World(3,200);
-			Entity fall = new Entity(mainWorld,new SettableVector(0.0,-105.0,0.0),new SettableVector(0.0,0.0,0.0),20.0);
-			mainWorld.appendContent(fall);
-			ForceVector spring = new SpringForce(3,1,2.0);
-			ForceVector gravity = new ConstantAcceleration(3,1,-10.0);
-			fall.addForces(spring,gravity);
-			int stable = 0;
-			while(stable < 500)
+			World mainWorld = new World(3,60);
+			Entity something = new Entity(mainWorld,10.0,new Vector(0.0,5.0,0.0),new Vector(2.0,0.0,-1.0));
+			mainWorld.appendContent(something);
+			ConstantAcceleration grav = new ConstantAcceleration(new Vector(0,-10,0));
+			something.addForces(grav);
+			while(mainWorld.getTimePassed()<=1.0)
 			{
+				System.out.println(mainWorld.print());
 				mainWorld.step();
-				if(Math.abs(fall.getVelocityVector().getSingleValue(1))<0.1)
-				{
-					stable++;
-				}
-				else
-				{
-					stable = 0;
-				}
-				System.out.println("pos="+Arrays.toString(fall.getPositionVector().getValues())
-									+",vel="+Arrays.toString(fall.getVelocityVector().getValues())
-									+"; t="+mainWorld.getTimePassed());
 			}
-		} catch (UnequalDimensionsException ex) {
+			System.out.println(mainWorld.print());
+		} 
+		catch (UnequalDimensionsException ex) 
+		{
 			Logger.getLogger(PhysicsSimulation.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
