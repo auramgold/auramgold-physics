@@ -28,9 +28,10 @@ public class PhysicsSimulation {
 			World mainWorld = new World(PhysicsSimulation.dimensionCount,200);
 			double orbitVelocity = Math.sqrt(GravityConstant*1E17);
 			Entity something = new Entity(mainWorld,10.0,new Vector(0.0,1000.0,0.0),new Vector(orbitVelocity,0.0,0.0));
-			System.out.println(something.getDimensionCount());
+			Entity anotherThing = new Entity(mainWorld,10.0,new Vector(0.0,-1000.0,0.0),new Vector(-orbitVelocity,0.0,0.0));
 			Entity somethingElse = new Entity(mainWorld,1.0E20,new Vector(3),new Vector(3));
 			mainWorld.appendContent(something);
+			mainWorld.appendContent(anotherThing);
 			mainWorld.appendContent(somethingElse);
 			while(mainWorld.getTimePassed()<=5.0)
 			{
