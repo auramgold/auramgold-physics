@@ -7,6 +7,7 @@ package physics.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import physics.rendering.RenderInfo;
 
 /**
  *
@@ -138,16 +139,26 @@ public class World {
 	public void step()
 	{
 		int amount = this.contents.size();
-		int i;
-		for(i=0;i<amount;i++)
+		for(int i=0;i<amount;i++)
 		{
 			this.contents.get(i).step();
 		}
-		for(i=0;i<amount;i++)
+		for(int i=0;i<amount;i++)
 		{
 			this.contents.get(i).completeStep();
 		}
 		this.cycles++;
+	}
+	
+	public RenderInfo[] render()
+	{
+		int amount = this.contents.size();
+		RenderInfo[] ret = new RenderInfo[amount];
+		for(int i=0;i<amount;i++)
+		{
+			ret[i] = this.contents.get(i).render();
+		}
+		return ret;
 	}
 	
 	/**

@@ -5,6 +5,8 @@
  */
 package physics.simulation;
 
+import physics.rendering.RenderInfo;
+
 /**
  *
  * @author Lauren Smith
@@ -27,4 +29,6 @@ public interface Thing {
 	 * @return A String representation of <code>this</code>.
 	 */
 	public String print();
+	
+	public RenderInfo render();
 }

@@ -64,6 +64,15 @@ public class Vector {
 		return new Vector(resultComponents);
 	}
 	
+	public Vector subtract(Vector other) throws UnequalDimensionsException
+	{
+		if (other.dimensionCount != this.dimensionCount )
+		{
+			throw new UnequalDimensionsException();
+		}
+		return this.add(other.negate());
+	}
+	
 	/**
 	 * Multiplies a vector by a given amount.
 	 * 
@@ -99,7 +108,7 @@ public class Vector {
 	 */
 	public Vector getIntermediateVector(Vector other) throws UnequalDimensionsException
 	{
-		return other.add(this.negate());
+		return other.subtract(this);
 	}
 	
 	/**
@@ -135,6 +144,11 @@ public class Vector {
 	public double getLength()
 	{
 		return Math.sqrt(this.getLengthSquared());
+	}
+	
+	public double[] getComponents()
+	{
+		return this.components;
 	}
 	
 	/**

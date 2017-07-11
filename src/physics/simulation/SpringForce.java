@@ -1,5 +1,9 @@
 package physics.simulation;
 
+import java.awt.Shape;
+import java.awt.geom.Line2D;
+import physics.rendering.WindowRenderer;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,7 +14,7 @@ package physics.simulation;
  *
  * @author Lauren Smith
  */
-public class SpringForce extends ForceVector{
+public class SpringForce extends ForceVector implements RenderableForce{
 
 	/**
 	 * The number of components of the vector.
@@ -53,6 +57,14 @@ public class SpringForce extends ForceVector{
 	public int getDimensionCount()
 	{
 		return this.dimensionCount;
+	}
+	
+	@Override
+	public Shape getRepresentation(Entity what)
+	{
+		double[] wv = what.getPositionVector().components;
+		double[] cv = this.centerPoint.components;
+		return new Line2D.Double(cv[0],cv[1],wv[0],wv[1]);
 	}
 	
 	@Override

@@ -13,7 +13,12 @@ import java.util.List;
  * @author Lauren Smith
  */
 public class GravityForce extends ForceVector{
-
+	
+	/**
+	 * The G constant from Newton's law of universal gravitation.
+	 */
+	static double GravityConstant = 6.67408E-11;
+	//static double GravityConstant = 100;
 	/**
 	 * The number of components of the vector.
 	 */
@@ -52,10 +57,10 @@ public class GravityForce extends ForceVector{
 					Entity curr = (Entity) current;
 					Vector inter = what.getPositionVector().getIntermediateVector(curr.getPositionVector());
 					Vector gravity = inter.getUnitVector()
-									.multiply(PhysicsSimulation.GravityConstant*what.getMass()*curr.getMass()
+									.multiply(GravityForce.GravityConstant*what.getMass()*curr.getMass()
 												/inter.getLengthSquared());
 					ret = ret.add(gravity);
-					System.out.println("Radius: "+inter.getLength());
+					//System.out.println("Radius: "+inter.getLength());
 				}
 			}
 		}

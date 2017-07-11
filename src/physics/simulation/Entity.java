@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import physics.rendering.RenderInfo;
 
 /**
  *
@@ -48,7 +49,7 @@ public class Entity implements Thing {
 	/**
 	 * An <code>ArrayList</code> of the forces applied to the entity.
 	 */
-	protected List<ForceVector> forces = new ArrayList<>();
+	protected ArrayList<ForceVector> forces = new ArrayList<>();
 	
 	/**
 	 * Constructs an entity with position and velocity vectors being all 0.0.
@@ -120,11 +121,8 @@ public class Entity implements Thing {
 	 */
 	public void addForces(ForceVector... what) throws UnequalDimensionsException
 	{
-		int len = what.length;
-		int i;
-		for(i=0;i<len;i++)
-		{
-			this.addForce(what[i]);
+		for (ForceVector what1 : what) {
+			this.addForce(what1);
 		}
 	}
 	
@@ -243,6 +241,12 @@ public class Entity implements Thing {
 		{
 			Logger.getLogger(Entity.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+	
+	@Override
+	public RenderInfo render()
+	{
+		return new RenderInfo(this,this.forces);
 	}
 	
 	/**
