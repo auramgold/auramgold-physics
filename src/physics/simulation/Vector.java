@@ -5,6 +5,9 @@
  */
 package physics.simulation;
 
+import java.awt.Shape;
+import java.awt.geom.Line2D;
+
 /**
  *
  * @author Solonarv
@@ -149,6 +152,30 @@ public class Vector {
 	public double[] getComponents()
 	{
 		return this.components;
+	}
+	
+	public Shape renderVectorLine(boolean scale,double... origin) throws UnequalDimensionsException
+	{
+		Vector ender = new Vector(origin).add(this);
+		if(scale)
+		{
+			ender = this.getUnitVector().multiply(Math.log10(ender.getLength())).add(new Vector(origin));
+		}
+		double[] end = ender.getComponents();
+		return new Line2D.Double(origin[0],origin[1],end[0],end[1]);
+	}
+	
+	public Shape[] renderVector(boolean scale,double... origin) throws UnequalDimensionsException
+	{
+		Shape[] ret = new Shape[1];
+		Vector endVect = new Vector(origin).add(this);
+		/*if(scale)
+		{
+			endVect = endVect.getUnitVector().multiply(Math.log10(endVect.getLength()));
+		}*/
+		double[] endBase = new Vector(origin).add(this).getComponents();
+		ret[0] = this.renderVectorLine(scale,origin);
+		return ret;
 	}
 	
 	/**

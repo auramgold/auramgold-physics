@@ -7,6 +7,8 @@ package physics.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import physics.rendering.RenderInfo;
 
 /**
@@ -156,7 +158,14 @@ public class World {
 		RenderInfo[] ret = new RenderInfo[amount];
 		for(int i=0;i<amount;i++)
 		{
-			ret[i] = this.contents.get(i).render();
+			try
+			{
+				ret[i] = this.contents.get(i).render();
+			}
+			catch (UnequalDimensionsException ex)
+			{
+				Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 		return ret;
 	}

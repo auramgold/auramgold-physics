@@ -6,17 +6,10 @@
 package physics.rendering;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import physics.simulation.PhysicsSimulation;
 
 /**
@@ -38,7 +31,20 @@ public class WindowRenderer implements Runnable{
 		while(wind.isVisible())
 		{
 			long startTime = System.nanoTime();
-			RenderInfo[] renderable = PhysicsSimulation.mainWorld.render();
+			boolean passed = false;
+			RenderInfo[] renderable = null;
+			while(!passed)
+			{
+				try
+				{
+					renderable = PhysicsSimulation.mainWorld.render();
+					passed = true;
+				}
+				catch(NullPointerException ex)
+				{
+					passed = false;
+				}
+			}
 			for(RenderInfo thing: renderable)
 			{
 				graphicsReference.setColor(Color.black);
@@ -46,6 +52,13 @@ public class WindowRenderer implements Runnable{
 				{
 					graphicsReference.draw(shap);
 					graphicsReference.fill(shap);
+				}
+				graphicsReference.setColor(Color.blue);
+				graphicsReference.draw(thing.velocity);
+				graphicsReference.setColor(Color.red);
+				for(Shape vectorDisp: thing.forceRenders)
+				{
+					graphicsReference.draw(vectorDisp);
 				}
 			}
 			long endTime = System.nanoTime();

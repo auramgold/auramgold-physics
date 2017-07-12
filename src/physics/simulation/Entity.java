@@ -195,6 +195,11 @@ public class Entity implements Thing {
 		return this.mass;
 	}
 	
+	public Vector[] getAppliedForces()
+	{
+		return this.appliedForces;
+	}
+	
 	/**
 	 * Calculates all changes in position and velocity of the entity for the given frame.
 	 */
@@ -244,7 +249,7 @@ public class Entity implements Thing {
 	}
 	
 	@Override
-	public RenderInfo render()
+	public RenderInfo render() throws UnequalDimensionsException
 	{
 		return new RenderInfo(this,this.forces);
 	}

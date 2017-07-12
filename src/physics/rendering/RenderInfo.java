@@ -7,14 +7,13 @@ package physics.rendering;
 
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Arrays;
 import physics.simulation.Entity;
 import physics.simulation.ForceVector;
 import physics.simulation.RenderableForce;
+import physics.simulation.UnequalDimensionsException;
 import physics.simulation.Vector;
 
 /**
@@ -25,22 +24,35 @@ public class RenderInfo {
 	public final Vector positionVector;
 	public final double size;
 	public final int dimensionCount;
+	public final Line2D velocity;
+	public final Entity what;
+	ArrayList<Shape> forceRenders = new ArrayList<>();
 	ArrayList<Shape> otherShapes = new ArrayList<>();
 	
-	public RenderInfo(Vector position,double size)
+	public RenderInfo(Vector position,double size,Entity what) throws UnequalDimensionsException
 	{
 		this.positionVector = position;
 		this.dimensionCount = this.positionVector.dimensionCount;
 		this.size = Math.log10(Math.abs(size));
+		this.what = what;
+		velocity = (Line2D)what.getVelocityVector().renderVectorLine(false,what.getPositionVector().getComponents());
 	}
 	
-	public RenderInfo(Entity what,ArrayList<ForceVector> forces)
+	public RenderInfo(Entity what,ArrayList<ForceVector> forces) throws UnequalDimensionsException
 	{
-		this(what.getPositionVector(),what.getMass());
+		this(what.getPositionVector(),what.getMass(),what);
 		for (ForceVector force : forces) {
 			if(force instanceof RenderableForce)
 			{
 				otherShapes.add(((RenderableForce) force).getRepresentation(what));
+			}
+		}
+		Vector[] forcedisps = what.getAppliedForces();
+		if(forcedisps.length > 0)
+		{
+			for(Vector force : forcedisps)
+			{
+				forceRenders.addAll(Arrays.asList(force.multiply(1/what.getMass()).renderVector(false,what.getPositionVector().getComponents())));
 			}
 		}
 	}

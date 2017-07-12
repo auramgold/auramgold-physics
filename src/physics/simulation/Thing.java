@@ -30,5 +30,5 @@ public interface Thing {
 	 */
 	public String print();
 	
-	public RenderInfo render();
+	public RenderInfo render() throws UnequalDimensionsException;
 }
