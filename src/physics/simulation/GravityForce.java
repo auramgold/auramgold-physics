@@ -1,5 +1,6 @@
 package physics.simulation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -41,10 +42,10 @@ public class GravityForce extends ForceVector{
 	}
 	
 	@Override
-	public Vector getForceVector(Entity what) throws UnequalDimensionsException
+	public Vector[] getForceVector(Entity what) throws UnequalDimensionsException
 	{
 		World world = what.getContainingWorld();
-		Vector ret = new Vector(this.dimensionCount);
+		ArrayList<Vector> ret = new ArrayList<>();
 		List<Thing> stuff = world.getAllContentsBut(what);
 		int count = stuff.size();
 		for(int i = 0;i<count;i++)
@@ -59,11 +60,11 @@ public class GravityForce extends ForceVector{
 					Vector gravity = inter.getUnitVector()
 									.multiply(GravityForce.GravityConstant*what.getMass()*curr.getMass()
 												/inter.getLengthSquared());
-					ret = ret.add(gravity);
+					ret.add(gravity);
 					//System.out.println("Radius: "+inter.getLength());
 				}
 			}
 		}
-		return ret;
+		return ret.toArray(new Vector[ret.size()]);
 	}
 }

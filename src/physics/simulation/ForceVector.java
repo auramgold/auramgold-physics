@@ -23,7 +23,7 @@ public abstract class ForceVector{
 	 * @return A <code>Vector</code> containing the force applied to the entity.
 	 * @throws UnequalDimensionsException
 	 */
-	public abstract Vector getForceVector(Entity what) throws UnequalDimensionsException;
+	public abstract Vector[] getForceVector(Entity what) throws UnequalDimensionsException;
 	
 	public abstract int getDimensionCount();
 }

@@ -68,9 +68,9 @@ public class SpringForce extends ForceVector implements RenderableForce{
 	}
 	
 	@Override
-	public Vector getForceVector(Entity what) throws UnequalDimensionsException
+	public Vector[] getForceVector(Entity what) throws UnequalDimensionsException
 	{
 		Vector inter = what.getPositionVector().getIntermediateVector(this.centerPoint);
-		return inter.getUnitVector().multiply(inter.getLength()*this.springConstant);
+		return new Vector[]{ inter.getUnitVector().multiply(inter.getLength()*this.springConstant) };
 	}
 }

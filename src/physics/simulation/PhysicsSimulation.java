@@ -15,7 +15,7 @@ import physics.rendering.WindowRenderer;
  */
 public class PhysicsSimulation implements Runnable{
 	public static int dimensionCount = 2;
-	public static double timeScale = 800.0;
+	public static double timeScale = 200.0;
 	static boolean useGravity = true;
 	@SuppressWarnings("StaticNonFinalUsedInInitialization")
 	static GravityForce gravity = new GravityForce(PhysicsSimulation.dimensionCount);
@@ -54,15 +54,15 @@ public class PhysicsSimulation implements Runnable{
 		try {
 			double orbitVelocity = Math.sqrt(GravityForce.GravityConstant*1E17/200);
 			Entity something = new Entity(mainWorld,10000.0,new Vector(500.0,300.0),new Vector(orbitVelocity,0));
-			//Entity anotherThing = new Entity(mainWorld,100.0,new Vector(250.0,550.0),new Vector(2.0,100.0));
+			Entity anotherThing = new Entity(mainWorld,100.0,new Vector(250.0,550.0),new Vector(2.0,300.0));
 			Entity starA = new Entity(
 										mainWorld,
-										1E17,
-										new Vector(500.0,500.0),
+										0.5E17,
+										new Vector(475.0,500.0),
 										new Vector(
 													0,
-													//258.31373366509183*Math.pow(0.5,0.5)
-													0
+													258.31373366509183*Math.pow(0.5,0.5)
+													//0
 													)
 										);
 			Entity starB = new Entity(
@@ -72,13 +72,13 @@ public class PhysicsSimulation implements Runnable{
 										new Vector(0,-258.31373366509183*Math.pow(0.5,0.5))
 										);
 			mainWorld.appendContent(something);
-			//mainWorld.appendContent(anotherThing);
+			mainWorld.appendContent(anotherThing);
 			mainWorld.appendContent(starA);
-			//mainWorld.appendContent(starB);
-			mainWorld.appendContent(new Entity(mainWorld,1000.0,new Vector(700.0,480.0),new Vector(0,140)));
-			//mainWorld.appendContent(new Entity(mainWorld,1E14,new Vector(50,500),new Vector(0,101.31898219902405)));
-			mainWorld.appendContent(new Entity(mainWorld,1E3,new Vector(100,525),new Vector(-18.26553927482022,101.31898219902405)));
-			mainWorld.appendContent(new Entity(mainWorld,1E9,new Vector(600,400),new Vector(10,250)));
+			mainWorld.appendContent(starB);
+			mainWorld.appendContent(new Entity(mainWorld,1000.0,new Vector(700.0,480.0),new Vector(0,-200)));
+			mainWorld.appendContent(new Entity(mainWorld,1E10,new Vector(950,500),new Vector(0,101.31898219902405)));
+			//mainWorld.appendContent(new Entity(mainWorld,1E3,new Vector(100,525),new Vector(-18.26553927482022,101.31898219902405)));
+			//mainWorld.appendContent(new Entity(mainWorld,1E9,new Vector(600,500),new Vector(10,270)));
 			//mainWorld.appendContent(central);
 			(new Thread(new PhysicsSimulation())).start();
 			(new Thread(new WindowRenderer())).start();

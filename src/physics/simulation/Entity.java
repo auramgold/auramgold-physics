@@ -39,7 +39,7 @@ public class Entity implements Thing {
 	
 	private Vector positionChange;
 	private Vector velocityChange;
-	private Vector[] appliedForces = new Vector[0];
+	private ArrayList<Vector> appliedForces = new ArrayList<>();
 
 	/**
 	 * The mass of the object
@@ -195,7 +195,7 @@ public class Entity implements Thing {
 		return this.mass;
 	}
 	
-	public Vector[] getAppliedForces()
+	public ArrayList<Vector> getAppliedForces()
 	{
 		return this.appliedForces;
 	}
@@ -211,15 +211,17 @@ public class Entity implements Thing {
 			int forceCount = this.forces.size();
 			this.positionChange = new Vector(this.dimensionCount);
 			this.velocityChange = new Vector(this.dimensionCount);
-			this.appliedForces = new Vector[forceCount];
+			this.appliedForces = new ArrayList<>();
 			double timeScale = this.containingWorld.getTimeScale();
 			int i;
 			for(i=0;i<forceCount;i++)
 			{
 				ForceVector which = this.forces.get(i);
-				Vector force = which.getForceVector(this);
-				this.appliedForces[i] = force;
-				this.velocityChange = this.velocityChange.add(force.multiply(1.0/(this.mass*timeScale)));
+				for(Vector force : which.getForceVector(this))
+				{
+					this.appliedForces.add(force);
+					this.velocityChange = this.velocityChange.add(force.multiply(1.0/(this.mass*timeScale)));
+				}
 			}
 			this.positionChange = this.positionChange
 									.add(this.velocity.multiply(1/timeScale))
@@ -271,10 +273,10 @@ public class Entity implements Thing {
 	public String printForces()
 	{
 		String ret = "Force Vectors:\n";
-		int count = this.appliedForces.length;
+		int count = this.appliedForces.size();
 		for(int i = 0;i<count;i++)
 		{
-			ret = ret+"        "+i+": "+this.appliedForces[i].toString()+"\n";
+			ret = ret+"        "+i+": "+this.appliedForces.get(i).toString()+"\n";
 		}
 		return ret;
 	}

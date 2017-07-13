@@ -10,6 +10,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import physics.simulation.Entity;
 import physics.simulation.ForceVector;
 import physics.simulation.RenderableForce;
@@ -41,18 +42,24 @@ public class RenderInfo {
 	public RenderInfo(Entity what,ArrayList<ForceVector> forces) throws UnequalDimensionsException
 	{
 		this(what.getPositionVector(),what.getMass(),what);
-		for (ForceVector force : forces) {
+		for (ForceVector force : forces)
+		{
 			if(force instanceof RenderableForce)
 			{
 				otherShapes.add(((RenderableForce) force).getRepresentation(what));
 			}
 		}
-		Vector[] forcedisps = what.getAppliedForces();
-		if(forcedisps.length > 0)
+		ArrayList<Vector> forcedisps = what.getAppliedForces();
+		if(forcedisps.size() > 0)
 		{
-			for(Vector force : forcedisps)
+			Vector[] forced = forcedisps.toArray(new Vector[1]);
+			for(Vector force : forced)
 			{
-				forceRenders.addAll(Arrays.asList(force.multiply(1/what.getMass()).renderVector(false,what.getPositionVector().getComponents())));
+				Vector modForce = force.multiply(1/what.getMass());
+				if(modForce.getLength() > 1.0)
+				{
+					this.forceRenders.addAll(Arrays.asList(modForce.renderVector(false,what.getPositionVector().getComponents())));
+				}
 			}
 		}
 	}

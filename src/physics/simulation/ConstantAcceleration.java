@@ -39,8 +39,8 @@ public class ConstantAcceleration extends ForceVector {
 	}
 
 	@Override
-	public Vector getForceVector(Entity what)
+	public Vector[] getForceVector(Entity what)
 	{
-		return this.accelerationVector.multiply(what.getMass());
+		return new Vector[]{this.accelerationVector.multiply(what.getMass())};
 	}
 }

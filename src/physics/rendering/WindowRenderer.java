@@ -18,7 +18,7 @@ import physics.simulation.PhysicsSimulation;
  */
 
 public class WindowRenderer implements Runnable{
-	public static final int framerate = 60;
+	public static final int framerate = 600000000;
 	public static final Window wind = new Window("Physics Simulation");
 	public static long frameTime = (long)Math.floor(1E9/framerate);
 	public static int frames = 0;
@@ -31,26 +31,22 @@ public class WindowRenderer implements Runnable{
 		while(wind.isVisible())
 		{
 			long startTime = System.nanoTime();
-			boolean passed = false;
-			RenderInfo[] renderable = null;
-			while(!passed)
+			graphicsReference = (Graphics2D) wind.surf.getGraphics();
+			RenderInfo[] renderable;
+			try
 			{
-				try
-				{
-					renderable = PhysicsSimulation.mainWorld.render();
-					passed = true;
-				}
-				catch(NullPointerException ex)
-				{
-					passed = false;
-				}
+				renderable = PhysicsSimulation.mainWorld.render();
+			}
+			catch(NullPointerException ex)
+			{
+				continue;
 			}
 			for(RenderInfo thing: renderable)
 			{
 				graphicsReference.setColor(Color.black);
+				graphicsReference.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),0,900);
 				for(Shape shap: thing.getRepresentation())
 				{
-					graphicsReference.draw(shap);
 					graphicsReference.fill(shap);
 				}
 				graphicsReference.setColor(Color.blue);
@@ -60,7 +56,9 @@ public class WindowRenderer implements Runnable{
 				{
 					graphicsReference.draw(vectorDisp);
 				}
+				
 			}
+			wind.repaint();
 			long endTime = System.nanoTime();
 			long procTime = endTime-startTime;
 			if(procTime < frameTime)
@@ -75,7 +73,6 @@ public class WindowRenderer implements Runnable{
 				}
 			}
 			frames++;
-			wind.surf.paintComponent(graphicsReference);
 		}
 		wind.setVisible(false);
 	}
