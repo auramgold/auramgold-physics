@@ -13,13 +13,15 @@ import java.util.List;
  *
  * @author Lauren Smith
  */
-public class GravityForce extends ForceVector{
+public class GravityForce extends ForceVector
+{
 	
 	/**
 	 * The G constant from Newton's law of universal gravitation.
+	 * In SI Units.
 	 */
 	static double GravityConstant = 6.67408E-11;
-	//static double GravityConstant = 100;
+
 	/**
 	 * The number of components of the vector.
 	 */
@@ -35,6 +37,10 @@ public class GravityForce extends ForceVector{
 		this.dimensionCount = dims;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public int getDimensionCount()
 	{

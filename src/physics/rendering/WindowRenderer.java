@@ -5,81 +5,84 @@
  */
 package physics.rendering;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import physics.simulation.PhysicsSimulation;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 /**
  *
  * @author Lauren Smith
  */
 
-public class WindowRenderer implements Runnable{
-	public static final int framerate = 600000000;
-	public static final Window wind = new Window("Physics Simulation");
-	public static long frameTime = (long)Math.floor(1E9/framerate);
+public class WindowRenderer implements Runnable
+{
+
+	/**
+	 * How many frames per second it renders.
+	 */
+	public static final int framerate = 1000;
+
+	/**
+	 * The window that it renders to.
+	 */
+	public static Window wind;
+
+	/**
+	 * The swing timer that activates the frame rendering
+	 */
+	public static Timer frameTimer;
+
+	/**
+	 * How many milliseconds per frame
+	 */
+	public static int frameTime = (int)Math.floor(1000/framerate);
+
+	/**
+	 * How many frames have passed
+	 */
 	public static int frames = 0;
 	
+	/**
+	 * Main method to run the rendering
+	 */
 	@Override
 	public void run()
 	{
-		wind.setVisible(true);
-		Graphics2D graphicsReference = (Graphics2D) wind.surf.getGraphics();
-		while(wind.isVisible())
+		wind = new Window("Physics Simulation");
+		if(framerate > 1000)
 		{
-			long startTime = System.nanoTime();
-			graphicsReference = (Graphics2D) wind.surf.getGraphics();
-			RenderInfo[] renderable;
-			try
-			{
-				renderable = PhysicsSimulation.mainWorld.render();
-			}
-			catch(NullPointerException ex)
-			{
-				continue;
-			}
-			for(RenderInfo thing: renderable)
-			{
-				graphicsReference.setColor(Color.black);
-				graphicsReference.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),0,900);
-				for(Shape shap: thing.getRepresentation())
-				{
-					graphicsReference.fill(shap);
-				}
-				graphicsReference.setColor(Color.blue);
-				graphicsReference.draw(thing.velocity);
-				graphicsReference.setColor(Color.red);
-				for(Shape vectorDisp: thing.forceRenders)
-				{
-					graphicsReference.draw(vectorDisp);
-				}
-				
-			}
-			wind.repaint();
-			long endTime = System.nanoTime();
-			long procTime = endTime-startTime;
-			if(procTime < frameTime)
-			{
-				try
-				{
-					Thread.sleep((long)Math.floor((frameTime - procTime)/1E6));
-				}
-				catch (InterruptedException ex)
-				{
-					Logger.getLogger(WindowRenderer.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-			frames++;
+			System.out.println("Warning: Framerates greater than 1000 are not supported");
 		}
-		wind.setVisible(false);
+		wind.setVisible(true);
+		ActionListener frameUpdate = new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				wind.updateFrame();
+			}
+		};
+		frameTimer = new Timer(frameTime,frameUpdate);
+		frameTimer.setRepeats(true);
+		frameTimer.start();
 	}
 	
-	public static void main()
+	/**
+	 * A method to check if the window is open that is null pointer exception safe
+	 * @return true if the window is open, false if not.
+	 */
+	public static boolean checkWindowEnabled()
 	{
-		(new Thread(new WindowRenderer())).start();
+		boolean ret;
+		try
+		{
+			ret = wind.isEnabled();
+		}
+		catch (NullPointerException ex)
+		{
+			ret = true;
+		}
+		return ret;
 	}
 	
 }

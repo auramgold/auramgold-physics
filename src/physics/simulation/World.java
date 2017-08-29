@@ -7,6 +7,7 @@ package physics.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import physics.rendering.RenderInfo;
@@ -36,6 +37,11 @@ public class World {
 	 * The <code>Thing</code>s in the world.
 	 */
 	protected List<Thing> contents = new ArrayList<>();
+	
+	/**
+	 * A lock to prevent rendering and processing going on at the same time
+	 */
+	public static ReentrantLock lock = new ReentrantLock();
 
 	/**
 	 * Constructs a world object.
@@ -72,7 +78,7 @@ public class World {
 	/**
 	 * Gets the time scale of the world.
 	 * 
-	 * @return
+	 * @return 
 	 */
 	public double getTimeScale()
 	{
@@ -140,32 +146,52 @@ public class World {
 	 */
 	public void step()
 	{
-		int amount = this.contents.size();
-		for(int i=0;i<amount;i++)
+		lock.lock();
+		try
 		{
-			this.contents.get(i).step();
+			int amount = this.contents.size();
+			for(int i=0;i<amount;i++)
+			{
+				this.contents.get(i).step();
+			}
+			for(int i=0;i<amount;i++)
+			{
+				this.contents.get(i).completeStep();
+			}
+			this.cycles++;
 		}
-		for(int i=0;i<amount;i++)
+		finally
 		{
-			this.contents.get(i).completeStep();
+			lock.unlock();
 		}
-		this.cycles++;
 	}
 	
+	/**
+	 * Gets the render info for all Things in the world
+	 * @return an array of RenderInfo
+	 */
 	public RenderInfo[] render()
 	{
+		lock.lock();
 		int amount = this.contents.size();
 		RenderInfo[] ret = new RenderInfo[amount];
-		for(int i=0;i<amount;i++)
+		try
 		{
-			try
+			for(int i=0;i<amount;i++)
 			{
-				ret[i] = this.contents.get(i).render();
+				try
+				{
+					ret[i] = this.contents.get(i).render();
+				}
+				catch (UnequalDimensionsException ex)
+				{
+					Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+				}
 			}
-			catch (UnequalDimensionsException ex)
-			{
-				Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
-			}
+		} 
+		finally
+		{
+			lock.unlock();
 		}
 		return ret;
 	}

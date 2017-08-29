@@ -5,6 +5,9 @@
  */
 package physics.simulation;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import physics.rendering.WindowRenderer;
@@ -13,39 +16,55 @@ import physics.rendering.WindowRenderer;
  *
  * @author Lauren Smith
  */
-public class PhysicsSimulation implements Runnable{
-	public static int dimensionCount = 2;
-	public static double timeScale = 200.0;
+public class PhysicsSimulation implements Runnable
+{
+
+	/**
+	 * How many dimensions are in the world, this will be changed to a user
+	 * configurable value later.
+	 */
+	public static final int dimensionCount = 2;
+
+	/**
+	 * How many steps per second the world runs at.
+	 */
+	public static final int timeScale = 1000;//<1000
+
+	/**
+	 * Number of milliseconds between frames
+	 */
+	public static final long waitTime = (long)Math.floor(1000/timeScale);
 	static boolean useGravity = true;
 	@SuppressWarnings("StaticNonFinalUsedInInitialization")
 	static GravityForce gravity = new GravityForce(PhysicsSimulation.dimensionCount);
+
+	/**
+	 * The main world that the simulation is run in.
+	 */
 	public static World mainWorld = new World(PhysicsSimulation.dimensionCount,PhysicsSimulation.timeScale);
-	@SuppressWarnings("StaticNonFinalUsedInInitialization")
-	static long frameTime = (long)Math.floor(1E9/timeScale);
 	
+	/**
+	 * Main method to simulate the world.
+	 */
 	@Override
 	public void run()
 	{
-		while(WindowRenderer.wind.isEnabled()||mainWorld.getTimePassed()<=5.0)//change to another condition later, no user input available yet
+		Timer timer = new Timer();
+		TimerTask runner = new TimerTask()
 		{
-			long startTime = System.nanoTime();
-			//System.out.println(mainWorld.print());
-			mainWorld.step();
-			long endTime = System.nanoTime();
-			long execTime = endTime - startTime;
-			if(execTime<frameTime)
+			@Override
+			public void run()
 			{
-				try
+				PhysicsSimulation.mainWorld.step();
+				if(!WindowRenderer.checkWindowEnabled())
 				{
-					Thread.sleep((long)Math.floor((frameTime-execTime)/1E6));
-				}
-				catch (InterruptedException ex)
-				{
-					Logger.getLogger(PhysicsSimulation.class.getName()).log(Level.SEVERE, null, ex);
+					timer.purge();
 				}
 			}
-		}
-		System.out.println(mainWorld.print());
+		};
+		timer.scheduleAtFixedRate(runner, 0, waitTime);
+		
+		//System.out.println(mainWorld.print());
 	}
 	/**
 	 * @param args the command line arguments
@@ -62,7 +81,6 @@ public class PhysicsSimulation implements Runnable{
 										new Vector(
 													0,
 													258.31373366509183*Math.pow(0.5,0.5)
-													//0
 													)
 										);
 			Entity starB = new Entity(
@@ -77,8 +95,9 @@ public class PhysicsSimulation implements Runnable{
 			mainWorld.appendContent(starB);
 			mainWorld.appendContent(new Entity(mainWorld,1000.0,new Vector(700.0,480.0),new Vector(0,-200)));
 			mainWorld.appendContent(new Entity(mainWorld,1E10,new Vector(950,500),new Vector(0,101.31898219902405)));
-			//mainWorld.appendContent(new Entity(mainWorld,1E3,new Vector(100,525),new Vector(-18.26553927482022,101.31898219902405)));
-			//mainWorld.appendContent(new Entity(mainWorld,1E9,new Vector(600,500),new Vector(10,270)));
+			mainWorld.appendContent(new Entity(mainWorld,1E3,new Vector(100,525),new Vector(-18.26553927482022,101.31898219902405)));
+			mainWorld.appendContent(new Entity(mainWorld,1E9,new Vector(600,500),new Vector(10,270)));
+			mainWorld.appendContent(new Entity(mainWorld,1E6,new Vector(200,500),new Vector(-10,160)));
 			//mainWorld.appendContent(central);
 			(new Thread(new PhysicsSimulation())).start();
 			(new Thread(new WindowRenderer())).start();

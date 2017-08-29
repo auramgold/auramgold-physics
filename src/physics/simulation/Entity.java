@@ -195,6 +195,10 @@ public class Entity implements Thing {
 		return this.mass;
 	}
 	
+	/**
+	 * Gets an ArrayList of the forces currently being applied to the Entity.
+	 * @return
+	 */
 	public ArrayList<Vector> getAppliedForces()
 	{
 		return this.appliedForces;
@@ -250,6 +254,11 @@ public class Entity implements Thing {
 		}
 	}
 	
+	/**
+	 * Outputs a RenderInfo object representing the entity
+	 * @return
+	 * @throws UnequalDimensionsException
+	 */
 	@Override
 	public RenderInfo render() throws UnequalDimensionsException
 	{

@@ -20,19 +20,13 @@ public class Surface extends JPanel
 {
 	Graphics gOld = null;
 	
+	/**
+	 *
+	 * @param g
+	 */
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		if(!isNull(gOld))
-		{
-			super.paintComponent(gOld);
-			try {
-				Thread.sleep(1, 500000);
-			} catch (InterruptedException ex) {
-				Logger.getLogger(Surface.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		gOld = g.create();
 		super.paintComponent(g);
 	}
 }

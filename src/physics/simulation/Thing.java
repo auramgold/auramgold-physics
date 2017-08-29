@@ -8,7 +8,7 @@ package physics.simulation;
 import physics.rendering.RenderInfo;
 
 /**
- *
+ * Something in a World that can be stepped and rendered.
  * @author Lauren Smith
  */
 public interface Thing {
@@ -30,5 +30,10 @@ public interface Thing {
 	 */
 	public String print();
 	
+	/**
+	 * Gets a RenderInfo representing this Thing
+	 * @return
+	 * @throws UnequalDimensionsException
+	 */
 	public RenderInfo render() throws UnequalDimensionsException;
 }

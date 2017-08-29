@@ -8,9 +8,16 @@ package physics.simulation;
 import java.awt.Shape;
 
 /**
- *
+ * This interface represents a force with a special rendering (like a spring)
  * @author Lauren Smith
  */
-public interface RenderableForce {
+public interface RenderableForce 
+{
+
+	/**
+	 * Gets the representation of the force.
+	 * @param what The Entity the force is on.
+	 * @return
+	 */
 	public Shape getRepresentation(Entity what);
 }

@@ -21,15 +21,43 @@ import physics.simulation.Vector;
  *
  * @author Lauren Smith
  */
-public class RenderInfo {
+public class RenderInfo
+{
+
+	/**
+	 * The position vector of the entity
+	 */
 	public final Vector positionVector;
+
+	/**
+	 * The radius of the rendered object
+	 */
 	public final double size;
+
+	/**
+	 * How many dimensions the entity has
+	 */
 	public final int dimensionCount;
+
+	/**
+	 * The line representing the entity's velocity vector.
+	 */
 	public final Line2D velocity;
+
+	/**
+	 * The entity that this has info for.
+	 */
 	public final Entity what;
 	ArrayList<Shape> forceRenders = new ArrayList<>();
 	ArrayList<Shape> otherShapes = new ArrayList<>();
 	
+	/**
+	 * Constructs a render info with a given position and size for a given entity.
+	 * @param position the position vector of the entity.
+	 * @param size the radius of the rendered object
+	 * @param what the entity that this describes
+	 * @throws UnequalDimensionsException
+	 */
 	public RenderInfo(Vector position,double size,Entity what) throws UnequalDimensionsException
 	{
 		this.positionVector = position;
@@ -39,6 +67,12 @@ public class RenderInfo {
 		velocity = (Line2D)what.getVelocityVector().renderVectorLine(false,what.getPositionVector().getComponents());
 	}
 	
+	/**
+	 * Constructs a render info with the given entity and the forces on it
+	 * @param what the entity to describe
+	 * @param forces an ArrayList of ForceVectors applies to the object in the given frame
+	 * @throws UnequalDimensionsException
+	 */
 	public RenderInfo(Entity what,ArrayList<ForceVector> forces) throws UnequalDimensionsException
 	{
 		this(what.getPositionVector(),what.getMass(),what);
@@ -58,13 +92,18 @@ public class RenderInfo {
 				Vector modForce = force.multiply(1/what.getMass());
 				if(modForce.getLength() > 1.0)
 				{
+					modForce = modForce.getUnitVector().multiply(Math.log(modForce.getLength())*20);
 					this.forceRenders.addAll(Arrays.asList(modForce.renderVector(false,what.getPositionVector().getComponents())));
 				}
 			}
 		}
 	}
 	
-	public ArrayList<Shape> getRepresentation()
+	/**
+	 * Adds the circle representing the entity to the shapes.
+	 * @return the ArrayList of shapes
+	 */
+	public ArrayList<Shape> addRepresentation()
 	{
 		double[] coords = positionVector.getComponents();
 		double radius = size;

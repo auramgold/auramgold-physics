@@ -10,7 +10,7 @@ import java.awt.geom.Line2D;
 
 /**
  *
- * @author Solonarv
+ * @author Lauren Smith
  */
 public class Vector {
 
@@ -67,6 +67,12 @@ public class Vector {
 		return new Vector(resultComponents);
 	}
 	
+	/**
+	 * Subtracts a vector from this vector
+	 * @param other the vector to be subtracted
+	 * @return
+	 * @throws UnequalDimensionsException
+	 */
 	public Vector subtract(Vector other) throws UnequalDimensionsException
 	{
 		if (other.dimensionCount != this.dimensionCount )
@@ -149,11 +155,22 @@ public class Vector {
 		return Math.sqrt(this.getLengthSquared());
 	}
 	
+	/**
+	 * Gets the components of the vector.
+	 * @return
+	 */
 	public double[] getComponents()
 	{
 		return this.components;
 	}
 	
+	/**
+	 * Renders a line for the vector.
+	 * @param scale Whether or not to scale the vector
+	 * @param origin where the vector originates
+	 * @return
+	 * @throws UnequalDimensionsException
+	 */
 	public Shape renderVectorLine(boolean scale,double... origin) throws UnequalDimensionsException
 	{
 		Vector ender = new Vector(origin).add(this);
@@ -165,6 +182,13 @@ public class Vector {
 		return new Line2D.Double(origin[0],origin[1],end[0],end[1]);
 	}
 	
+	/**
+	 * Renders the vector
+	 * @param scale Whether or not to scale the vector
+	 * @param origin where the vector originates
+	 * @return
+	 * @throws UnequalDimensionsException
+	 */
 	public Shape[] renderVector(boolean scale,double... origin) throws UnequalDimensionsException
 	{
 		Shape[] ret = new Shape[1];

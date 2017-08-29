@@ -53,12 +53,21 @@ public class SpringForce extends ForceVector implements RenderableForce{
 		}
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public int getDimensionCount()
 	{
 		return this.dimensionCount;
 	}
 	
+	/**
+	 *
+	 * @param what The Entity this SpringForce is being applied to
+	 * @return
+	 */
 	@Override
 	public Shape getRepresentation(Entity what)
 	{

@@ -5,15 +5,15 @@
  */
 package physics.rendering;
 
-import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import physics.simulation.PhysicsSimulation;
 
 /**
  *
@@ -21,18 +21,84 @@ import javax.swing.JPopupMenu;
  */
 public class Window extends JFrame
 {
+
+	/**
+	 * The surface to which rendering happens.
+	 */
 	public Surface surf = new Surface();
+
+	/**
+	 * The menu at the top of the screen
+	 */
 	public JMenuBar menuBar = new JMenuBar();
 	
+	/**
+	 * Constructs a new window with the given title.
+	 * @param title the title to be assigned to the window.
+	 */
 	public Window(String title)
 	{
-		setSize(1000, 1000);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		add(surf);
 		this.constructMenu();
 		this.setJMenuBar(menuBar);
-		//setLocationRelativeTo(null);
+		setLocationRelativeTo(null);
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		System.out.println(this.isDoubleBuffered()+":"+surf.isDoubleBuffered());
+	}
+	
+	/**
+	 * Renders the next frame
+	 */
+	public void updateFrame()
+	{
+		Graphics2D surfGraph = (Graphics2D)surf.getGraphics();
+		RenderInfo[] renderable = new RenderInfo[]{};
+		boolean rendered = false;
+		while(!rendered)
+		{
+			try
+			{
+				renderable = PhysicsSimulation.mainWorld.render();
+				rendered = true;
+			}
+			finally{}
+		}
+		surfGraph.setColor(Color.black);
+		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),0,this.getHeight()-100);
+		for(RenderInfo thing: renderable)
+		{
+			if(!checkInWindow(thing)){continue;}
+			surfGraph.setColor(Color.black);
+			for(Shape shap: thing.addRepresentation())
+			{
+				surfGraph.fill(shap);
+			}
+			surfGraph.setColor(Color.blue);
+			surfGraph.draw(thing.velocity);
+			surfGraph.setColor(Color.red);
+			for(Shape vectorDisp: thing.forceRenders)
+			{
+				surfGraph.draw(vectorDisp);
+			}
+
+		}
+		surf.repaint();
+	}
+	
+	/**
+	 * Checks whether a given object is in the window
+	 * @param what a RenderInfo to check the location of
+	 * @return true if it is in the window, false if not.
+	 */
+	public boolean checkInWindow(RenderInfo what)
+	{
+		double[] pos = what.positionVector.getComponents();
+		double radius = what.size/2;
+		return !(pos[0]<(-radius)||pos[1]<(-radius)
+				||pos[0]>this.getWidth()+radius||pos[1]>this.getHeight()+radius);
+		
 	}
 	
 	private void constructMenu()
