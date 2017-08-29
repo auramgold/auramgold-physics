@@ -285,7 +285,7 @@ public class Entity implements Thing {
 		int count = this.appliedForces.size();
 		for(int i = 0;i<count;i++)
 		{
-			ret = ret+"        "+i+": "+this.appliedForces.get(i).toString()+"\n";
+			ret = ret+"		"+i+": "+this.appliedForces.get(i).toString()+"\n";
 		}
 		return ret;
 	}

@@ -208,7 +208,7 @@ public class World {
 		for(int i = 0; i < count; i++)
 		{
 			Thing item = this.contents.get(i);
-			ret = ret+"\n    "+i+": "+item.print();
+			ret = ret+"\n	"+i+": "+item.print();
 			if(item instanceof Entity)
 			{
 				ret = ret+"\n"+((Entity) item).printForces();

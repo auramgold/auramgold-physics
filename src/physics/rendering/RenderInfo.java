@@ -10,7 +10,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import physics.simulation.Entity;
 import physics.simulation.ForceVector;
 import physics.simulation.RenderableForce;

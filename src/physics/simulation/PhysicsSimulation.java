@@ -7,7 +7,6 @@ package physics.simulation;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import physics.rendering.WindowRenderer;
@@ -73,7 +72,7 @@ public class PhysicsSimulation implements Runnable
 		try {
 			double orbitVelocity = Math.sqrt(GravityForce.GravityConstant*1E17/200);
 			Entity something = new Entity(mainWorld,10000.0,new Vector(500.0,300.0),new Vector(orbitVelocity,0));
-			Entity anotherThing = new Entity(mainWorld,100.0,new Vector(250.0,550.0),new Vector(2.0,300.0));
+			Entity anotherThing = new Entity(mainWorld,100.0,new Vector(250.0,550.0),new Vector(2.0,200.0));
 			Entity starA = new Entity(
 										mainWorld,
 										0.5E17,
@@ -98,7 +97,6 @@ public class PhysicsSimulation implements Runnable
 			mainWorld.appendContent(new Entity(mainWorld,1E3,new Vector(100,525),new Vector(-18.26553927482022,101.31898219902405)));
 			mainWorld.appendContent(new Entity(mainWorld,1E9,new Vector(600,500),new Vector(10,270)));
 			mainWorld.appendContent(new Entity(mainWorld,1E6,new Vector(200,500),new Vector(-10,160)));
-			//mainWorld.appendContent(central);
 			(new Thread(new PhysicsSimulation())).start();
 			(new Thread(new WindowRenderer())).start();
 		} 

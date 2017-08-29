@@ -65,26 +65,31 @@ public class Window extends JFrame
 			}
 			finally{}
 		}
+		ArrayList<Shape> velocities = new ArrayList<>();
+		ArrayList<Shape> forces = new ArrayList<>();
 		surfGraph.setColor(Color.black);
-		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),0,this.getHeight()-100);
+		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),10,this.getHeight()-100);
 		for(RenderInfo thing: renderable)
 		{
 			if(!checkInWindow(thing)){continue;}
-			surfGraph.setColor(Color.black);
 			for(Shape shap: thing.addRepresentation())
 			{
 				surfGraph.fill(shap);
 			}
-			surfGraph.setColor(Color.blue);
-			surfGraph.draw(thing.velocity);
-			surfGraph.setColor(Color.red);
-			for(Shape vectorDisp: thing.forceRenders)
-			{
-				surfGraph.draw(vectorDisp);
-			}
-
+			velocities.add(thing.velocity);
+			forces.addAll(thing.forceRenders);
 		}
-		surf.repaint();
+		surfGraph.setColor(Color.blue);
+		for(Shape vel: velocities)
+		{
+			surfGraph.draw(vel);
+		}
+		surfGraph.setColor(Color.red);
+		for(Shape force: forces)
+		{
+			surfGraph.draw(force);
+		}
+		this.repaint();
 	}
 	
 	/**
