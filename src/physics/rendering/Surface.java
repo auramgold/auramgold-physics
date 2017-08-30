@@ -6,10 +6,6 @@
 package physics.rendering;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import static java.util.Objects.isNull;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -27,6 +23,7 @@ public class Surface extends JPanel
 	@Override
 	public void paintComponent(Graphics g)
 	{
+		//horrible hacky hack that shouldn't work but does. prevents animation from flashing
 		for(int i = 0; i<32;i++)
 		{
 			super.paintComponent(g);
