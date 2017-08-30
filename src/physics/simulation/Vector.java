@@ -165,41 +165,20 @@ public class Vector {
 	}
 	
 	/**
-	 * Renders a line for the vector.
-	 * @param scale Whether or not to scale the vector
-	 * @param origin where the vector originates
-	 * @return
-	 * @throws UnequalDimensionsException
-	 */
-	public Shape renderVectorLine(boolean scale,double... origin) throws UnequalDimensionsException
-	{
-		Vector ender = new Vector(origin).add(this);
-		if(scale)
-		{
-			ender = this.getUnitVector().multiply(Math.log10(ender.getLength())).add(new Vector(origin));
-		}
-		double[] end = ender.getComponents();
-		return new Line2D.Double(origin[0],origin[1],end[0],end[1]);
-	}
-	
-	/**
 	 * Renders the vector
 	 * @param scale Whether or not to scale the vector
+	 * @param offsetVector
 	 * @param origin where the vector originates
 	 * @return
 	 * @throws UnequalDimensionsException
 	 */
-	public Shape[] renderVector(boolean scale,double... origin) throws UnequalDimensionsException
+	public Shape renderVector(double scale, Vector offsetVector, double... origin) throws UnequalDimensionsException
 	{
-		Shape[] ret = new Shape[1];
-		Vector endVect = new Vector(origin).add(this);
-		/*if(scale)
-		{
-			endVect = endVect.getUnitVector().multiply(Math.log10(endVect.getLength()));
-		}*/
-		double[] endBase = new Vector(origin).add(this).getComponents();
-		ret[0] = this.renderVectorLine(scale,origin);
-		return ret;
+		Vector starter = new Vector(origin).add(offsetVector).multiply(scale);
+		double[] start = starter.getComponents();
+		Vector ender = starter.add(this.multiply(scale));
+		double[] end = ender.getComponents();
+		return new Line2D.Double(start[0],start[1],end[0],end[1]);
 	}
 	
 	/**

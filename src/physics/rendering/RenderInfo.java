@@ -10,6 +10,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import physics.simulation.Entity;
 import physics.simulation.ForceVector;
 import physics.simulation.RenderableForce;
@@ -63,7 +65,12 @@ public class RenderInfo
 		this.dimensionCount = this.positionVector.dimensionCount;
 		this.size = Math.log10(Math.abs(size));
 		this.what = what;
-		velocity = (Line2D)what.getVelocityVector().renderVectorLine(false,what.getPositionVector().getComponents());
+		velocity = (Line2D)what.getVelocityVector().renderVector
+		(
+			WindowRenderer.wind.surf.getScale(),
+			WindowRenderer.wind.surf.getOffset(),
+			what.getPositionVector().getComponents()
+		);
 	}
 	
 	/**
@@ -75,13 +82,13 @@ public class RenderInfo
 	public RenderInfo(Entity what,ArrayList<ForceVector> forces) throws UnequalDimensionsException
 	{
 		this(what.getPositionVector(),what.getMass(),what);
-		for (ForceVector force : forces)
-		{
-			if(force instanceof RenderableForce)
-			{
-				otherShapes.add(((RenderableForce) force).getRepresentation(what));
-			}
-		}
+//		for (ForceVector force : forces)
+//		{
+//			if(force instanceof RenderableForce)
+//			{
+//				otherShapes.add(((RenderableForce) force).getRepresentation(what));
+//			}
+//		}
 		ArrayList<Vector> forcedisps = what.getAppliedForces();
 		if(forcedisps.size() > 0)
 		{
@@ -92,7 +99,12 @@ public class RenderInfo
 				if(modForce.getLength() > 1.0)
 				{
 //					modForce = modForce.getUnitVector().multiply(Math.log(modForce.getLength())*20);
-					this.forceRenders.addAll(Arrays.asList(modForce.renderVector(false,what.getPositionVector().getComponents())));
+					this.forceRenders.add(modForce.renderVector
+					(
+						WindowRenderer.wind.surf.getScale(),
+						WindowRenderer.wind.surf.getOffset(),
+						what.getPositionVector().getComponents())
+					);
 				}
 			}
 		}
@@ -104,8 +116,17 @@ public class RenderInfo
 	 */
 	public ArrayList<Shape> addRepresentation()
 	{
-		double[] coords = positionVector.getComponents();
-		double radius = size;
+		double[] coords = null;
+		try
+		{
+			coords = positionVector.add(WindowRenderer.getSurf().getOffset())
+					.multiply(WindowRenderer.getSurf().getScale()).getComponents();
+		}
+		catch (UnequalDimensionsException ex)
+		{
+			Logger.getLogger(RenderInfo.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		double radius = size*WindowRenderer.wind.surf.scale;
 		double x = coords[0] - radius;
 		double y = coords[1] - radius;
 		Ellipse2D eli = new Ellipse2D.Double(x, y, radius * 2, radius * 2);

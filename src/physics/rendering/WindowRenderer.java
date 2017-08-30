@@ -85,4 +85,9 @@ public class WindowRenderer implements Runnable
 		return ret;
 	}
 	
+	public static Surface getSurf()
+	{
+		return wind.surf;
+	}
+	
 }

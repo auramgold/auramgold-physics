@@ -6,7 +6,11 @@
 package physics.rendering;
 
 import java.awt.Graphics;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
+import physics.simulation.UnequalDimensionsException;
+import physics.simulation.Vector;
 
 /**
  *
@@ -14,7 +18,8 @@ import javax.swing.JPanel;
  */
 public class Surface extends JPanel 
 {
-	Graphics gOld = null;
+	protected double scale = 1.0;
+	protected Vector offset = new Vector(0.0,0.0);
 	
 	/**
 	 *
@@ -27,6 +32,33 @@ public class Surface extends JPanel
 		for(int i = 0; i<32;i++)
 		{
 			super.paintComponent(g);
+		}
+	}
+	
+	public double getScale()
+	{
+		return scale;
+	}
+	
+	public Vector getOffset()
+	{
+		return offset;
+	}
+	
+	public void shiftScale(double clicks)
+	{
+		this.scale *= Math.pow(1.1,clicks);
+	}
+	
+	public void shiftOffset(int xShift, int yShift)
+	{
+		try
+		{
+			offset = offset.add(new Vector((double)xShift,(double)yShift).multiply(1/scale));
+		}
+		catch (UnequalDimensionsException ex)
+		{
+			Logger.getLogger(Surface.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 }

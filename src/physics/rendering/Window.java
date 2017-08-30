@@ -8,6 +8,10 @@ package physics.rendering;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -32,6 +36,9 @@ public class Window extends JFrame
 	 */
 	public JMenuBar menuBar = new JMenuBar();
 	
+	public boolean isBeingDragged = false;
+	public int[] coords = {0,0};
+	
 	/**
 	 * Constructs a new window with the given title.
 	 * @param title the title to be assigned to the window.
@@ -42,6 +49,32 @@ public class Window extends JFrame
 		add(surf);
 		this.constructMenu();
 		this.setJMenuBar(menuBar);
+		this.addMouseWheelListener(new MouseWheelListener()
+		{
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent mwe)
+			{
+				double shift = -mwe.getPreciseWheelRotation();
+				surf.shiftScale(shift);
+			}
+		});
+		this.addMouseMotionListener(new MouseMotionListener()
+		{
+			@Override
+			public void mouseDragged(MouseEvent me)
+			{
+				int[] newCoords = {me.getX(),me.getY()};
+				surf.shiftOffset(newCoords[0]-coords[0], newCoords[1]-coords[1]);
+				coords = newCoords;
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent me)
+			{
+				int[] newCoords = {me.getX(),me.getY()};
+				coords = newCoords;
+			}
+		});
 		setLocationRelativeTo(null);
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
