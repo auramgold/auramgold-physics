@@ -27,6 +27,9 @@ public class Surface extends JPanel
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		super.paintComponent(g);
+		for(int i = 0; i<32;i++)
+		{
+			super.paintComponent(g);
+		}
 	}
 }

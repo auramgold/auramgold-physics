@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -71,7 +73,7 @@ public class Window extends JFrame
 		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),10,this.getHeight()-100);
 		for(RenderInfo thing: renderable)
 		{
-			if(!checkInWindow(thing)){continue;}
+//			if(!checkInWindow(thing)){continue;}
 			for(Shape shap: thing.addRepresentation())
 			{
 				surfGraph.fill(shap);
@@ -89,6 +91,7 @@ public class Window extends JFrame
 		{
 			surfGraph.draw(force);
 		}
+		
 		this.repaint();
 	}
 	

@@ -11,7 +11,8 @@ import physics.rendering.RenderInfo;
  * Something in a World that can be stepped and rendered.
  * @author Lauren Smith
  */
-public interface Thing {
+public interface Thing
+{
 	
 	/**
 	 * The method run every <code>World</code> cycle.

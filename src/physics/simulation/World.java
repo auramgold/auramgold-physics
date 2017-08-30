@@ -16,7 +16,8 @@ import physics.rendering.RenderInfo;
  *
  * @author Lauren Smith
  */
-public class World {
+public class World
+{
 
 	/**
 	 * Number of spatial dimensions in the world.

@@ -59,13 +59,14 @@ public class GravityForce extends ForceVector
 			Thing current = stuff.get(i);
 			if(current instanceof Entity)
 			{
-				if(((Entity) current).getMass() > 0.0)
+				if(((Entity) current).getMass() != 0.0)
 				{
 					Entity curr = (Entity) current;
 					Vector inter = what.getPositionVector().getIntermediateVector(curr.getPositionVector());
+					double force = (GravityForce.GravityConstant*what.getMass()
+									*curr.getMass())/inter.getLengthSquared();
 					Vector gravity = inter.getUnitVector()
-									.multiply(GravityForce.GravityConstant*what.getMass()*curr.getMass()
-												/inter.getLengthSquared());
+									.multiply(force);
 					ret.add(gravity);
 					//System.out.println("Radius: "+inter.getLength());
 				}

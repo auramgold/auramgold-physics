@@ -91,7 +91,7 @@ public class RenderInfo
 				Vector modForce = force.multiply(1/what.getMass());
 				if(modForce.getLength() > 1.0)
 				{
-					modForce = modForce.getUnitVector().multiply(Math.log(modForce.getLength())*20);
+//					modForce = modForce.getUnitVector().multiply(Math.log(modForce.getLength())*20);
 					this.forceRenders.addAll(Arrays.asList(modForce.renderVector(false,what.getPositionVector().getComponents())));
 				}
 			}

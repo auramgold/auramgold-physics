@@ -20,7 +20,7 @@ public class WindowRenderer implements Runnable
 	/**
 	 * How many frames per second it renders.
 	 */
-	public static final int framerate = 1000;
+	public static final int framerate = 100;
 
 	/**
 	 * The window that it renders to.
