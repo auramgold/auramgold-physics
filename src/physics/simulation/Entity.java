@@ -5,7 +5,7 @@
  */
 package physics.simulation;
 
-import java.util.List;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,19 +51,18 @@ public class Entity implements Thing {
 	 */
 	protected ArrayList<ForceVector> forces = new ArrayList<>();
 	
+	public final Color renderColor;
+	
 	/**
 	 * Constructs an entity with position and velocity vectors being all 0.0.
 	 * 
 	 * @param container The containing <code>World</code>
 	 * @param massAmount The mass of the object.
+	 * @throws physics.simulation.UnequalDimensionsException
 	 */
-	public Entity(World container, double massAmount)
+	public Entity(World container, double massAmount) throws UnequalDimensionsException
 	{
-		this.containingWorld = container;
-		this.dimensionCount = containingWorld.getDimensionCount();
-		this.position = new Vector(new double[this.dimensionCount]);
-		this.velocity = new Vector(new double[this.dimensionCount]);
-		this.mass = massAmount;
+		this(container,massAmount,new Vector(container.dimensionCount),new Vector(container.dimensionCount));
 	}
 	
 	/**
@@ -93,6 +92,12 @@ public class Entity implements Thing {
 			this.velocity = vel;
 			this.mass = massAmount;
 		}
+		this.renderColor = new Color
+		(
+			(int)Math.floor(this.position.getLength())%256,
+			(int)Math.floor(this.velocity.getLength())%256,
+			(int)Math.floor(this.position.multiply(this.velocity.getLengthSquared()).getLength())%256
+		);
 	}
 	
 	/**

@@ -104,7 +104,7 @@ public class Window extends JFrame
 		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),10,this.getHeight()-100);
 		for(RenderInfo thing: renderable)
 		{
-//			if(!checkInWindow(thing)){continue;}
+			surfGraph.setColor(thing.what.renderColor);
 			for(Shape shap: thing.addRepresentation())
 			{
 				surfGraph.fill(shap);

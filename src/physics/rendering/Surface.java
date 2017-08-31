@@ -29,9 +29,18 @@ public class Surface extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		//horrible hacky hack that shouldn't work but does. prevents animation from flashing
-		for(int i = 0; i<32;i++)
+		int max = (int)Math.ceil(20/Math.pow(this.getHeight()*this.getWidth(),0.01));
+		for(int i = 0; i<max;i++)
 		{
 			super.paintComponent(g);
+			try
+			{
+				Thread.sleep(0, 50);
+			}
+			catch (InterruptedException ex)
+			{
+				Logger.getLogger(Surface.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 	

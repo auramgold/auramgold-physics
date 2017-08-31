@@ -88,10 +88,27 @@ public class PhysicsSimulation implements Runnable
 										new Vector(525.0,500.0),
 										new Vector(0,-258.31373366509183*Math.pow(0.5,0.5))
 										);
+			Entity starC = new Entity(
+										mainWorld,
+										0.5E17,
+										new Vector(10475.0,500.0),
+										new Vector(
+													0,
+													258.31373366509183*Math.pow(0.5,0.5)
+													)
+										);
+			Entity starD = new Entity(
+										mainWorld,
+										0.5E17,
+										new Vector(10525.0,500.0),
+										new Vector(0,-258.31373366509183*Math.pow(0.5,0.5))
+										);
 			mainWorld.appendContent(something);
 			mainWorld.appendContent(anotherThing);
 			mainWorld.appendContent(starA);
 			mainWorld.appendContent(starB);
+//			mainWorld.appendContent(starC);
+//			mainWorld.appendContent(starD);
 			mainWorld.appendContent(new Entity(mainWorld,1000.0,new Vector(700.0,480.0),new Vector(0,-200)));
 			mainWorld.appendContent(new Entity(mainWorld,1E10,new Vector(950,500),new Vector(0,101.31898219902405)));
 			mainWorld.appendContent(new Entity(mainWorld,1E3,new Vector(100,525),new Vector(-18.26553927482022,101.31898219902405)));
@@ -99,6 +116,7 @@ public class PhysicsSimulation implements Runnable
 			mainWorld.appendContent(new Entity(mainWorld,1E6,new Vector(200,500),new Vector(-10,180)));
 			mainWorld.appendContent(new Entity(mainWorld,1E15,new Vector(500,10),new Vector(116,0)));
 			mainWorld.appendContent(new Entity(mainWorld,1E4,new Vector(500,30), new Vector(116-57.76,0)));
+//			mainWorld.appendContent(new Entity(mainWorld,1E10,new Vector(10000,30), new Vector(-30,70)));
 			(new Thread(new PhysicsSimulation())).start();
 			(new Thread(new WindowRenderer())).start();
 		} 
@@ -106,6 +124,11 @@ public class PhysicsSimulation implements Runnable
 		{
 			Logger.getLogger(PhysicsSimulation.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+	
+	public static int randomInt(int max)
+	{
+		return (int)Math.floor(Math.random()*max);
 	}
 	
 }
