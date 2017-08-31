@@ -100,8 +100,6 @@ public class Window extends JFrame
 		}
 		ArrayList<Shape> velocities = new ArrayList<>();
 		ArrayList<Shape> forces = new ArrayList<>();
-		surfGraph.setColor(Color.black);
-		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),10,this.getHeight()-100);
 		for(RenderInfo thing: renderable)
 		{
 			surfGraph.setColor(thing.what.renderColor);
@@ -122,7 +120,9 @@ public class Window extends JFrame
 		{
 			surfGraph.draw(force);
 		}
-		
+		surfGraph.setColor(Color.black);
+		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),10,this.getHeight()-100);
+		surfGraph.drawString("Scale: 1 pixel = "+1/surf.getScale()+" meters",10,this.getHeight()-80);
 		this.repaint();
 	}
 	

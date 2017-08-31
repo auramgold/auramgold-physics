@@ -20,6 +20,7 @@ public class Surface extends JPanel
 {
 	protected double scale = 1.0;
 	protected Vector offset = new Vector(0.0,0.0);
+	private final double scaleExpBase = Math.pow(2.0,0.125);
 	
 	/**
 	 *
@@ -56,7 +57,11 @@ public class Surface extends JPanel
 	
 	public void shiftScale(double clicks)
 	{
-		this.scale *= Math.pow(1.1,clicks);
+		this.scale *= Math.pow(scaleExpBase,clicks);
+		if(Math.abs(1000-(this.scale*1000))<5)
+		{
+			this.scale = 1.0;
+		}
 	}
 	
 	public void shiftOffset(int xShift, int yShift)
