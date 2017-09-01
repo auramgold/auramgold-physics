@@ -54,7 +54,11 @@ public class PhysicsSimulation implements Runnable
 			@Override
 			public void run()
 			{
-				PhysicsSimulation.mainWorld.step();
+				if(!mainWorld.paused)
+				{
+					mainWorld.step();
+				}
+				
 				if(!WindowRenderer.checkWindowEnabled())
 				{
 					timer.purge();

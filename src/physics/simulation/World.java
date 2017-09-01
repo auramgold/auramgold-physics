@@ -39,6 +39,8 @@ public class World
 	 */
 	protected List<Thing> contents = new ArrayList<>();
 	
+	public boolean paused = false;
+	
 	/**
 	 * A lock to prevent rendering and processing going on at the same time
 	 */
@@ -195,6 +197,21 @@ public class World
 			lock.unlock();
 		}
 		return ret;
+	}
+	
+	public void pause()
+	{
+		this.paused = true;
+	}
+	
+	public void unpause()
+	{
+		this.paused = false;
+	}
+	
+	public void setPause(boolean state)
+	{
+		this.paused = state;
 	}
 	
 	/**

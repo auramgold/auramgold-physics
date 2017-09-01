@@ -20,7 +20,7 @@ public class GravityForce extends ForceVector
 	 * The G constant from Newton's law of universal gravitation.
 	 * In SI Units.
 	 */
-	static double GravityConstant = 6.67408E-11;
+	public static final double GravityConstant = 6.67408E-11;
 
 	/**
 	 * The number of components of the vector.

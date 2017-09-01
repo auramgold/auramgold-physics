@@ -8,11 +8,15 @@ package physics.rendering;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.ItemEvent;
+import static java.awt.event.ItemEvent.SELECTED;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -36,8 +40,10 @@ public class Window extends JFrame
 	 */
 	public JMenuBar menuBar = new JMenuBar();
 	
+	
 	public boolean isBeingDragged = false;
 	public int[] coords = {0,0};
+	public JCheckBoxMenuItem pauseBox;
 	
 	/**
 	 * Constructs a new window with the given title.
@@ -148,6 +154,19 @@ public class Window extends JFrame
 		file.add(new JMenuItem("Save"));
 		file.add(new JMenuItem("Load"));
 		heads.add(file);
+		JMenu options = new JMenu("Options");
+		pauseBox = new JCheckBoxMenuItem("Pause");
+		pauseBox.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				boolean newVal = e.getStateChange()==SELECTED;
+				PhysicsSimulation.mainWorld.setPause(newVal);
+			}
+		});
+		options.add(pauseBox);
+		heads.add(options);
 		for(JMenu top : heads)
 		{
 			menuBar.add(top);
