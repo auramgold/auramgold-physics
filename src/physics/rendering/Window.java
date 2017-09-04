@@ -8,20 +8,106 @@ package physics.rendering;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import static java.awt.event.ItemEvent.SELECTED;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import physics.simulation.PhysicsSimulation;
+import physics.simulation.UnequalDimensionsException;
+import physics.simulation.World;
+
+class SaveAction extends AbstractAction
+{
+
+	SaveAction(String save)
+	{
+		super(save);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae)
+	{
+		WindowRenderer.wind.pauseBox.setState(true);
+		int resp = WindowRenderer.wind.filePicker.showSaveDialog(WindowRenderer.wind);
+		
+		if(resp == JFileChooser.APPROVE_OPTION)
+		{
+			File file = WindowRenderer.wind.filePicker.getSelectedFile();
+			String loc = file.getAbsolutePath();
+			if(!"wld".equals(loc.substring(loc.lastIndexOf(".")+1)))
+			{
+				loc += ".wld";
+			}
+			if(file.exists()) file.delete();
+			file = new File(loc);
+			try
+			{
+				FileWriter fw = new FileWriter(file);
+				fw.write(PhysicsSimulation.mainWorld.getRepresent());
+				fw.close();
+			}
+			catch (IOException ex)
+			{
+				Logger.getLogger(SaveAction.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+}
+
+class OpenAction extends AbstractAction
+{
+
+	OpenAction(String o)
+	{
+		super(o);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae)
+	{
+		WindowRenderer.wind.pauseBox.setState(true);
+		int resp = WindowRenderer.wind.filePicker.showOpenDialog(WindowRenderer.wind);
+		
+		if(resp == JFileChooser.APPROVE_OPTION)
+		{
+			File file = WindowRenderer.wind.filePicker.getSelectedFile();
+			String loc = file.getAbsolutePath();
+			if(file.exists())
+			{
+				try
+				{
+					PhysicsSimulation.mainWorld = new World(new String(Files.readAllBytes(Paths.get(loc))));
+				}
+				catch (IOException | UnequalDimensionsException ex)
+				{
+					Logger.getLogger(OpenAction.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
+	}
+}
 
 /**
  *
@@ -40,6 +126,7 @@ public class Window extends JFrame
 	 */
 	public JMenuBar menuBar = new JMenuBar();
 	
+	public JFileChooser filePicker = new JFileChooser();
 	
 	public boolean isBeingDragged = false;
 	public int[] coords = {0,0};
@@ -51,6 +138,7 @@ public class Window extends JFrame
 	 */
 	public Window(String title)
 	{
+		filePicker.setFileFilter(new FileNameExtensionFilter("World Files", "wld"));
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		add(surf);
 		this.constructMenu();
@@ -151,11 +239,13 @@ public class Window extends JFrame
 		ArrayList<JMenu> heads = new ArrayList<>();
 		JMenu file = new JMenu("File");
 		file.add(new JMenuItem("New"));
-		file.add(new JMenuItem("Save"));
-		file.add(new JMenuItem("Load"));
+		JMenuItem openOpt = new JMenuItem(new OpenAction("Open"));
+		file.add(openOpt);
+		JMenuItem saveOpt = new JMenuItem(new SaveAction("Save"));
+		file.add(saveOpt);
 		heads.add(file);
 		JMenu options = new JMenu("Options");
-		pauseBox = new JCheckBoxMenuItem("Pause");
+		pauseBox = new JCheckBoxMenuItem("Pause",PhysicsSimulation.mainWorld.paused);
 		pauseBox.addItemListener(new ItemListener()
 		{
 			@Override

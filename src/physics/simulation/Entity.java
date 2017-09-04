@@ -270,6 +270,12 @@ public class Entity implements Thing {
 		return new RenderInfo(this,this.forces);
 	}
 	
+	@Override
+	public String getRepresent()
+	{
+		return mass+";"+position.toString()+";"+velocity.toString();
+	}
+	
 	/**
 	 *
 	 * @return A string containing the position and velocity vectors of the object in the current frame in a human readable form.

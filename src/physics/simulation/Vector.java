@@ -7,13 +7,14 @@ package physics.simulation;
 
 import java.awt.Shape;
 import java.awt.geom.Line2D;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Lauren Smith
  */
-public class Vector {
-
+public class Vector 
+{
 	/**
 	 * The number of components of the vector.
 	 */
@@ -98,6 +99,11 @@ public class Vector {
 		return new Vector(resultComponents);
 	}
 	
+	public Vector divide(double scalar)
+	{
+		return this.multiply(1/scalar);
+	}
+	
 	/**
 	 * Multiplies the vector by -1.0.
 	 * 
@@ -179,6 +185,18 @@ public class Vector {
 		Vector ender = starter.add(this.multiply(scale));
 		double[] end = ender.getComponents();
 		return new Line2D.Double(start[0],start[1],end[0],end[1]);
+	}
+	
+	public static Vector parseVector(String rep)
+	{
+		String vectRep = rep.substring(1, rep.length()-2);
+		String[] splitVect = vectRep.split(",");
+		double[] numComps = new double[splitVect.length];
+		for(int i = 0; i<splitVect.length; i++)
+		{
+			numComps[i] = Double.parseDouble(splitVect[i]);
+		}
+		return new Vector(numComps);
 	}
 	
 	/**

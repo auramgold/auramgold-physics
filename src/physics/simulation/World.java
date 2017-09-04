@@ -39,7 +39,7 @@ public class World
 	 */
 	protected List<Thing> contents = new ArrayList<>();
 	
-	public boolean paused = false;
+	public boolean paused = true;
 	
 	/**
 	 * A lock to prevent rendering and processing going on at the same time
@@ -56,6 +56,32 @@ public class World
 	{
 		this.dimensionCount = dimensions;
 		this.timeScale = scale;
+	}
+	
+	public World(String represent) throws UnequalDimensionsException
+	{
+		String[] entArr = represent.replace("\r", "").split("\n");
+		String[] worldInfo = entArr[0].split(";");
+		this.timeScale = Double.parseDouble(worldInfo[0]);
+		this.dimensionCount = Integer.parseInt(worldInfo[1]);
+		this.cycles = Integer.parseInt(worldInfo[2]);
+		if(entArr.length > 1)
+		{
+			for(int i = 1; i < entArr.length; i++)
+			{
+				String[] entRep = entArr[i].split(";");
+				this.appendContent
+				(
+					new Entity
+					(
+						this,
+						Double.parseDouble(entRep[0]),
+						Vector.parseVector(entRep[1]),
+						Vector.parseVector(entRep[2])
+					)
+				);
+			}
+		}
 	}
 	
 	/**
@@ -125,7 +151,7 @@ public class World
 	 * @param what The <code>Thing</code> to add.
 	 * @throws UnequalDimensionsException
 	 */
-	public void appendContent(Thing what) throws UnequalDimensionsException
+	public final void appendContent(Thing what) throws UnequalDimensionsException
 	{
 		if(what instanceof Entity)
 		{
@@ -212,6 +238,16 @@ public class World
 	public void setPause(boolean state)
 	{
 		this.paused = state;
+	}
+	
+	public String getRepresent()
+	{
+		String ret = timeScale+";"+dimensionCount+";"+cycles;
+		for(Thing ent:contents)
+		{
+			ret += "\n"+ent.getRepresent();
+		}
+		return ret;
 	}
 	
 	/**

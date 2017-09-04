@@ -31,6 +31,8 @@ public interface Thing
 	 */
 	public String print();
 	
+	public String getRepresent();
+	
 	/**
 	 * Gets a RenderInfo representing this Thing
 	 * @return
