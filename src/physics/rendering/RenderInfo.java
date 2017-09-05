@@ -116,16 +116,7 @@ public class RenderInfo
 	 */
 	public ArrayList<Shape> addRepresentation()
 	{
-		double[] coords = null;
-		try
-		{
-			coords = positionVector.add(WindowRenderer.getSurf().getOffset())
-					.multiply(WindowRenderer.getSurf().getScale()).getComponents();
-		}
-		catch (UnequalDimensionsException ex)
-		{
-			Logger.getLogger(RenderInfo.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		double[] coords = WindowRenderer.wind.surf.simuToScreenCoords(positionVector);
 		double radius = size*WindowRenderer.wind.surf.scale;
 		double x = coords[0] - radius;
 		double y = coords[1] - radius;

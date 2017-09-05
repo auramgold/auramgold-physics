@@ -9,10 +9,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
+import static java.awt.event.InputEvent.BUTTON1_MASK;
 import java.awt.event.ItemEvent;
 import static java.awt.event.ItemEvent.SELECTED;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import static java.awt.event.MouseEvent.BUTTON1;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
@@ -32,7 +36,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import physics.simulation.PhysicsSimulation;
 import physics.simulation.UnequalDimensionsException;
@@ -158,7 +161,10 @@ public class Window extends JFrame
 			public void mouseDragged(MouseEvent me)
 			{
 				int[] newCoords = {me.getX(),me.getY()};
-				surf.shiftOffset(newCoords[0]-coords[0], newCoords[1]-coords[1]);
+				if(me.getModifiers()==InputEvent.BUTTON1_MASK)
+				{
+					surf.shiftOffset(newCoords[0]-coords[0], newCoords[1]-coords[1]);
+				}
 				coords = newCoords;
 			}
 
@@ -167,6 +173,37 @@ public class Window extends JFrame
 			{
 				int[] newCoords = {me.getX(),me.getY()};
 				coords = newCoords;
+			}
+		});
+		this.addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseClicked(MouseEvent me)
+			{
+			}
+
+			@Override
+			public void mousePressed(MouseEvent me)
+			{
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent me)
+			{
+				if(me.getModifiers()==InputEvent.BUTTON3_MASK)
+				{
+					System.out.println("hi");
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent me)
+			{
+			}
+
+			@Override
+			public void mouseExited(MouseEvent me)
+			{
 			}
 		});
 		setLocationRelativeTo(null);
@@ -192,6 +229,7 @@ public class Window extends JFrame
 			}
 			finally{}
 		}
+		Shape[] bary = PhysicsSimulation.mainWorld.getBarycenter();
 		ArrayList<Shape> velocities = new ArrayList<>();
 		ArrayList<Shape> forces = new ArrayList<>();
 		for(RenderInfo thing: renderable)
@@ -213,6 +251,11 @@ public class Window extends JFrame
 		for(Shape force: forces)
 		{
 			surfGraph.draw(force);
+		}
+		surfGraph.setColor(Color.green);
+		for(Shape lin: bary)
+		{
+			surfGraph.draw(lin);
 		}
 		surfGraph.setColor(Color.black);
 		surfGraph.drawString("t="+PhysicsSimulation.mainWorld.getTimePassed(),10,this.getHeight()-100);
@@ -238,7 +281,14 @@ public class Window extends JFrame
 	{
 		ArrayList<JMenu> heads = new ArrayList<>();
 		JMenu file = new JMenu("File");
-		file.add(new JMenuItem("New"));
+		file.add(new JMenuItem(new AbstractAction("New")
+		{
+			@Override
+			public void actionPerformed(ActionEvent ae)
+			{
+				PhysicsSimulation.reset();
+			}
+		}));
 		JMenuItem openOpt = new JMenuItem(new OpenAction("Open"));
 		file.add(openOpt);
 		JMenuItem saveOpt = new JMenuItem(new SaveAction("Save"));

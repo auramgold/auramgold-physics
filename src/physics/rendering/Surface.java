@@ -78,6 +78,20 @@ public class Surface extends JPanel
 		return ret;
 	}
 	
+	public double[] simuToScreenCoords(Vector pos)
+	{
+		double[] ret = new double[pos.dimensionCount];
+		try
+		{
+			ret = pos.add(offset).multiply(scale).getComponents();
+		}
+		catch (UnequalDimensionsException ex)
+		{
+			Logger.getLogger(Surface.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return ret;
+	}
+	
 	public void shiftOffset(int xShift, int yShift)
 	{
 		try

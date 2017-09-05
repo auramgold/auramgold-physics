@@ -5,12 +5,16 @@
  */
 package physics.simulation;
 
+import java.awt.Color;
+import java.awt.Shape;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import physics.rendering.RenderInfo;
+import physics.rendering.WindowRenderer;
 
 /**
  *
@@ -77,7 +81,8 @@ public class World
 						this,
 						Double.parseDouble(entRep[0]),
 						Vector.parseVector(entRep[1]),
-						Vector.parseVector(entRep[2])
+						Vector.parseVector(entRep[2]),
+						new Color(Integer.parseInt(entRep[3]))
 					)
 				);
 			}
@@ -222,6 +227,36 @@ public class World
 		{
 			lock.unlock();
 		}
+		return ret;
+	}
+	
+	public Shape[] getBarycenter()
+	{
+		Vector sum = new Vector(dimensionCount);
+		double crossSize = 5;
+		double totalMass = 0.0;
+		Shape[] ret = new Shape[2];
+		for(Thing obj: contents)
+		{
+			if(obj instanceof Entity)
+			{
+				Entity ent = (Entity)obj;
+				try
+				{
+					sum = sum.add(ent.getPositionVector().multiply(ent.getMass()));
+					totalMass += ent.getMass();
+				}
+				catch (UnequalDimensionsException ex)
+				{
+					Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				
+			}
+		}
+		Vector avg = sum.divide(totalMass);
+		double[] coords = WindowRenderer.wind.surf.simuToScreenCoords(avg);
+		ret[0] = new Line2D.Double(coords[0]-crossSize, coords[1], coords[0]+crossSize, coords[1]);
+		ret[1] = new Line2D.Double(coords[0], coords[1]-crossSize, coords[0], coords[1]+crossSize);
 		return ret;
 	}
 	

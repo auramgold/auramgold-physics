@@ -76,6 +76,11 @@ public class Entity implements Thing {
 	 */
 	public Entity(World container, double massAmount,Vector pos,Vector vel) throws UnequalDimensionsException
 	{
+		this(container,massAmount,pos,vel,generateColor());
+	}
+	
+	public Entity(World container, double massAmount,Vector pos,Vector vel,Color col) throws UnequalDimensionsException
+	{
 		this.containingWorld = container;
 		this.dimensionCount = this.containingWorld.getDimensionCount();
 		if(pos.dimensionCount!=this.dimensionCount)
@@ -92,12 +97,12 @@ public class Entity implements Thing {
 			this.velocity = vel;
 			this.mass = massAmount;
 		}
-		this.renderColor = new Color
-		(
-			(int)Math.floor(this.position.getLength())%256,
-			(int)Math.floor(this.velocity.getLength())%256,
-			(int)Math.floor(this.position.multiply(this.velocity.getLengthSquared()).getLength())%256
-		);
+		this.renderColor = col;
+	}
+	
+	private static Color generateColor()
+	{
+		return new Color((int)Math.floor(Math.random()*Math.pow(2.0,24)));
 	}
 	
 	/**
@@ -273,7 +278,7 @@ public class Entity implements Thing {
 	@Override
 	public String getRepresent()
 	{
-		return mass+";"+position.toString()+";"+velocity.toString();
+		return mass+";"+position.toString()+";"+velocity.toString()+";"+renderColor.getRGB();
 	}
 	
 	/**

@@ -40,7 +40,7 @@ public class PhysicsSimulation implements Runnable
 	/**
 	 * The main world that the simulation is run in.
 	 */
-	public static World mainWorld = new World(PhysicsSimulation.dimensionCount,PhysicsSimulation.timeScale);
+	public static World mainWorld = new World(dimensionCount,timeScale);
 	
 	/**
 	 * Main method to simulate the world.
@@ -130,6 +130,11 @@ public class PhysicsSimulation implements Runnable
 		{
 			Logger.getLogger(PhysicsSimulation.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+	
+	public static void reset()
+	{
+		mainWorld = new World(dimensionCount,timeScale);
 	}
 	
 	public static int randomInt(int max)
